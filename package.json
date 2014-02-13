@@ -1,0 +1,33 @@
+{
+  "name": "sucka",
+  "version": "0.1.0",
+  "author": "Jonathon Morgan <jonathon@ushahidi.com>",
+  "description": "A framework for sucking data into CrisisNet",
+  "scripts": {
+    "dev-server": "NODE_ENV=development nodemon app/main.js",
+    "qa-server": "NODE_ENV=staging nodemon app.js",
+    "prod-server": "NODE_ENV=production node app.js",
+    "test-server": "NODE_ENV=test mocha",
+    "make-docs": "doxx --template ./docs-template.jade --title \"Hey, Sucka\" --source ./app --target ./docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ushahidi/sucka.git"
+  },
+  "dependencies": {
+    "nodemon": "0.7.10",
+    "underscore": "1.5.1",
+    "request": "~2.25.0",
+    "kue": "0.7.4",
+    "require-all": "0.0.8",
+    "promise": "~4.0.0",
+    "moment": "~2.5.1",
+    "twit": "~1.1.12",
+    "config": "~0.4.35"
+  },
+  "devDependencies": {
+    "mocha": "1.13.0",
+    "chai": "~1.9.0"
+  },
+  "license": "MIT"
+}
