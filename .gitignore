@@ -3,3 +3,4 @@ config/production.json
 config/staging.json
 .DS_Store
 node_modules
+docs
