@@ -8,7 +8,7 @@
     "qa-server": "NODE_ENV=staging nodemon app.js",
     "prod-server": "NODE_ENV=production node app.js",
     "test-server": "NODE_ENV=test mocha",
-    "make-docs": "doxx --template ./docs-template.jade --title \"Hey, Sucka\" --source ./app --target ./docs"
+    "make-docs": "doxx --template ./docs-template.jade --title \"Hey, Sucka\" --source ./app --target ../sucka-docs"
   },
   "repository": {
     "type": "git",
