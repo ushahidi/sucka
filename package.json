@@ -23,7 +23,10 @@
     "promise": "~4.0.0",
     "moment": "~2.5.1",
     "twit": "~1.1.12",
-    "config": "~0.4.35"
+    "config": "~0.4.35",
+    "redis": "~0.10.0",
+    "mongoose": "~3.8.7",
+    "mongoose-validator": "~0.2.2"
   },
   "devDependencies": {
     "mocha": "1.13.0",

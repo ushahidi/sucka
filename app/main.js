@@ -1,6 +1,6 @@
 var kue = require('kue')
   , _ = require("underscore")
-  , queue = kue.createQueue()
+  , redis = require("redis")
   , suckas = require('require-all')(__dirname + '/modules/suckas')
   , Promise = require('promise')
   , EventEmitter = require('events').EventEmitter
@@ -21,6 +21,9 @@ var App = function() {};
 App.prototype.start = function() {
   var that = this;
 
+  this.transformQueue = redis.createClient();
+  this.suckaQueue = kue.createQueue();
+
   this.processErrorHandling();
 
   // Setup the shared message bus used by all sucka instances
@@ -32,7 +35,7 @@ App.prototype.start = function() {
   });
 
   // Check for delayed jobs that need to be promoted. This runs every 5 seconds
-  queue.promote();
+  this.suckaQueue.promote();
 
 };
 
@@ -148,11 +151,14 @@ App.prototype.initiateSucking = function(sources) {
     if(source.frequency === "repeats") {
       // Perform a suck whenever this source has an active task in the queue. 
       // We use the source.id (string) as the task `type`/event name. 
-      queue.process(source.id, function(task, done) {
+      this.suckaQueue.process(source.id, function(task, done) {
         that.suckIt(task.data.source, done);
       });
     }
 
+    // Some sources will be sucked only once, once per processes, or need 
+    // to be sucked for the first time, even if they'll repeat. Find 'em and
+    // suck 'em.
     that.shouldSuck(source).then(function(shouldSuck) {
       if(shouldSuck) that.suckIt(source)
     });
@@ -220,8 +226,11 @@ App.prototype.postSuck = function(source) {
   // update source lastRun with current timestamp
   // determine if we should schedule another suck for this source
   console.log("post suck "+source);
+
+  this.transformQueue.publish("transform", JSON.stringify({id:source.id}));
+
   if(source.frequency === "repeats") {
-    queue.create(source.id, {source:source}).delay(1000).save();
+    this.suckaQueue.create(source.id, {source:source}).delay(1000).save();
   }
 
   
@@ -240,7 +249,7 @@ App.prototype.getSources = function() {
       hasRun: false,
       sourceType: "twitter",
       id: "abcdef123",
-      searchTerms: ["#CARcrisis"]
+      searchTerms: ["#ValentinesDay"]
     }];
 
   return new Promise(function (resolve, reject) {
