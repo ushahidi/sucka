@@ -37,7 +37,6 @@ var sourceSchema = mongoose.Schema({
     },
     repeatsEvery: {
       type: String,
-      required: false,
       validate: validate('isIn', ['minute', 'hour', 'day', 'week'])
     },
     hasRun: Boolean,
