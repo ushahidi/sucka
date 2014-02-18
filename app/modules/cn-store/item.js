@@ -81,7 +81,7 @@ var itemSchema = mongoose.Schema({
        * This is assuming that we'll extract all of the named places from the 
        * content and/or source document. 
        */
-      namedPlaces: [{name: String}],
+      namedPlaces: Array,
       /**
        * Note that coordinates should always been longitude, latitude
        */
