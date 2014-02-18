@@ -257,5 +257,6 @@ App.prototype.getSources = function() {
   });
 };
 
-(new App()).start();
+if(require.main === module) (new App()).start()
 
+module.exports = App;
