@@ -33,6 +33,83 @@ describe('Item', function(){
     });
   });
 
+  it('should create and save an Item model and return a promise!', function(done){
+    var itemData = {
+      remoteID: 1,
+      tags: ["health", "police"]
+    };
+
+    var item = new Item(itemData);
+
+    // Note that slick promise interface. Sweeeeeet
+    var promise = item.saveP();
+
+    promise.then(function(item) {
+      assert(item.remoteID === itemData.remoteID.toString());
+      assert.isDefined(item.id);
+      assert.isDefined(item.createdAt);
+      assert.isDefined(item.updatedAt);
+      done();
+    }, function(err) {
+      // This will fail, which is the point.
+      done(err);
+    });
+  });
+
+  it('should create and save a list of Item models and return a promise!', function(done){
+    var itemData = [{
+      remoteID: 1,
+      tags: ["health", "police"]
+    },
+    {
+      remoteID: 2,
+      tags: ["weather", "storm"]
+    }];
+
+    // Note that slick promise interface. Sweeeeeet
+    var promise = Item.saveList(itemData);
+
+    promise.then(function(items) {
+      assert(items[0].remoteID === itemData[0].remoteID.toString());
+      assert.isDefined(items[0].id);
+      assert.isDefined(items[0].createdAt);
+      assert.isDefined(items[0].updatedAt);
+
+      assert(items[1].remoteID === itemData[1].remoteID.toString());
+      assert.isDefined(items[1].id);
+      assert.isDefined(items[1].createdAt);
+      assert.isDefined(items[1].updatedAt);
+
+      done();
+    }, function(err) {
+      done(err);
+    });
+  });
+
+  it('should create invoke the error function when bad data is present', function(done){
+    var itemData = [{
+      remoteID: 1,
+      tags: ["health", "laksdjflkasjdflkasjdlfkj"]
+    },
+    {
+      remoteID: 2,
+      tags: ["weather", "storm"]
+    }];
+
+    // Note that slick promise interface. Sweeeeeet
+    var promise = Item.saveList(itemData);
+
+    promise.then(function(items) {
+      // This will throw an error, which is the point.
+      done(items);
+    }, function(err) {
+      assert.isNotNull(err);
+      // Make sure that tags validation threw the error
+      assert.isDefined(err.errors.tags);
+      done();
+    });
+  });
+
   it('should raise a validation error for bad tags', function(done) {
     var itemData = {
       remoteID: 1,

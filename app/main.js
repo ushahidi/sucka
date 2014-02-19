@@ -45,7 +45,6 @@ App.prototype.start = function() {
 
 };
 
-
 /**
  * While this may, at first, appear to be totes cray&#8482;, if the process crashes we 
  * may need to disable the source that is causing the problem. Otherwise 
@@ -113,15 +112,27 @@ App.prototype.setupBus = function() {
      * @param {function} done - callback for queue when task is complete
      */
     function(data, source, done) { 
-      // @TODO validate data
-      // save data
-      console.log("I sucked " + Date.now());
-      console.log(data);
-      
-      that.postSuck(source);
+      store.Item.saveList(data)
+      .then(
+        function(items) {
+          that.postSuck(source, items);
+          // No matter what et queue know that task has been completed
+          done();
+        },
+        function(err) {
+          /**
+           * If any of the models were not saved properly, then we have a 
+           * problem with this source that needs to be addressed. Pass as
+           * much information as possible to the error handler so we can
+           * take the source offline, and work with a snapshot of the data
+           * that caused the problem. 
+           */
+           that.handleBrokenSource(source, data, err);
 
-      // Let queue know that task has been completed
-      done();
+          // No matter what et queue know that task has been completed
+          done();
+        }
+      );
     }
   );
 
@@ -154,6 +165,7 @@ App.prototype.getSuckaForSource = function(source) {
  *
  * @param {Object} source - Source model instance 
  * @param {Object} data - Source model instance 
+ * @param {Object} error
  */
 App.prototype.handleBrokenSource = function(source, data, error) {
   // @TODO mark source.status as failing
@@ -245,7 +257,7 @@ App.prototype.suckIt = function(source, done) {
  *
  * @param {Object} source - Source model instance
  */
-App.prototype.postSuck = function(source) {
+App.prototype.postSuck = function(source, docs) {
   // @TODO
   // if this is a one-time suck, mark document as such
   // update source lastRun with current timestamp

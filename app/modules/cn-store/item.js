@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
   , validator = require('mongoose-validator')
   , validate = validator.validate
+  , Promise = require('promise')
   , _ = require('underscore')
   , _s = require('underscore.string')
   , allowedTags = require('./allowed-tags')
@@ -157,6 +158,44 @@ itemSchema.pre("save",function(next, done) {
 
     next();
 });
+
+
+/**
+ * Wrapper for `Item.save` that returns a `Promise` object. This is preferred 
+ * over simply called `save` and supplying a callback
+ */
+itemSchema.methods.saveP = function() {
+  var that = this;
+  return new Promise(function(resolve, reject) {
+    that.save(function(err, item) {
+      if(err) return reject(err);
+
+      resolve(item);
+    })
+  });
+};
+
+
+/**
+ * Take an array of objects that conform to Item schema. Generate a list of 
+ * promises, and return the promise object that results from calling `Promise.all` 
+ * on the list. This allows the caller to assign a single function to be executed 
+ * when all models or saved or an error occurs. 
+ *
+ * If the save is successful the caller will receive a list of saved model
+ * instances.
+ *
+ * @param {Array} data - List of objects that conform to Item schema
+ */
+itemSchema.statics.saveList = function(data) {
+  var that = this;
+  // Create a list of promises. 
+  var funcs = _(data).map(function(item) { 
+    return (new that(item)).saveP();
+  });
+
+  return Promise.all(funcs);
+};
 
 itemSchema.index({ "geo.coordinates": "2d" });
 
