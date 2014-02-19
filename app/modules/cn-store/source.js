@@ -56,9 +56,20 @@ var sourceSchema = mongoose.Schema({
       index: true,
       validate: validate('isIn', ['active', 'failing', 'inactive'])
     },
-    lastRun: Date
+    lastRun: Date,
+    filters: mongoose.Schema.Types.Mixed 
     //createdBy: User
 });
+
+sourceSchema.statics.findActive = function() {
+  var now = Date.now();
+  var query = this.find({
+    status: 'active', 
+    startDate: {'$lte': now}, 
+    endDate: {'$gte': now}
+  });
+  return query.exec();
+};
 
 sourceSchema.pre("save",function(next, done) {
     var self = this;

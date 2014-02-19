@@ -7,7 +7,9 @@ var expect = chai.expect
   , store = require('../app/modules/cn-store')
   , connect = store.connect
   , Source = store.Source
-  , clearDB  = require('mocha-mongoose')(config.dbURI);
+  , clearDB  = require('mocha-mongoose')(config.dbURI)
+  , moment = require('moment')
+  , async = require('async');
 
 describe('Source', function(){
   beforeEach(function(done) {
@@ -79,6 +81,52 @@ describe('Source', function(){
       assert.isNotNull(err);
       done();
     });
+  });
+
+  it('should find active sources', function(done){
+    var currentSourceData = {
+      sourceType: "awesome",
+      frequency: "always",
+      startDate: moment().subtract('d', 1),
+      endDate: moment().add('d', 1)
+    };
+
+    var expiredSourceData = {
+      sourceType: "twitter",
+      frequency: "always",
+      startDate: moment().subtract('d', 2),
+      endDate: moment().subtract('m', 1)
+    };
+
+    var inactiveSourceData = {
+      sourceType: "twitter",
+      frequency: "always",
+      startDate: moment().subtract('d', 1),
+      endDate: moment().add('d', 1),
+      status: 'inactive'
+    };
+
+    async.parallel([
+      function(callback){ 
+        var sourceModel = new Source(currentSourceData);
+        sourceModel.save(callback);
+      },
+      function(callback){ 
+        var sourceModel = new Source(expiredSourceData);
+        sourceModel.save(callback);
+      },
+      function(callback) {
+        var sourceModel = new Source(expiredSourceData);
+        sourceModel.save(callback);
+      }
+    ], function() {
+      Source.findActive().then(function(sources) {
+        assert(sources.length === 1);
+        assert(sources[0].sourceType === "awesome");
+        done();
+      });
+    });
+
   });
 
 })

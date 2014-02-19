@@ -23,7 +23,7 @@ TwitterSucka.prototype.suck = function() {
     access_token: config.accessToken,
     access_token_secret: config.accessTokenSecret
   });
-  var stream = T.stream('statuses/filter', { track: that.source.searchTerms.join() });
+  var stream = T.stream('statuses/filter', { track: that.source.filters.text });
 
   stream.on('tweet', function (tweet) {
     that.transform([tweet]);

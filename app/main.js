@@ -1,9 +1,13 @@
-var kue = require('kue')
+var config = require('config')
+  , logger = require('winston')
+  , kue = require('kue')
   , _ = require("underscore")
   , redis = require("redis")
+  , mongoose = require('mongoose')
   , suckas = require('require-all')(__dirname + '/modules/suckas')
   , Promise = require('promise')
   , EventEmitter = require('events').EventEmitter
+  , store = require("./modules/cn-store");
 
 
 // Start kue web server on port 3000
@@ -27,11 +31,13 @@ App.prototype.start = function() {
   this.processErrorHandling();
 
   // Setup the shared message bus used by all sucka instances
-  this.setupBus();  
+  this.setupBus();
 
-  // Retrieve the sources we have already
-  this.getSources().then(function(sources) {
-    that.initiateSucking(sources);
+  this.db = this.setupDB();
+  this.db.once('open', function() {
+    that.getSources().then(function(sources) {
+      that.initiateSucking(sources);
+    });
   });
 
   // Check for delayed jobs that need to be promoted. This runs every 5 seconds
@@ -60,14 +66,33 @@ App.prototype.processErrorHandling = function() {
     */
     function(e) {
       var matches = e.stack.match(/modules\/suckas\/([\w-]+)\.js/);
-      console.log("Bad sucka! " + matches[1]);
-
-      that.bus.emit("error", {sourceType: matches[1]}, null, e);
+      if(matches) {
+        logger.error("Bad sucka! " + matches[1]);
+        that.bus.emit("error", {sourceType: matches[1]}, null, e.message);
+      }
+      else {
+        logger.error(e.message);
+      }
       process.exit();
     }
   );
 };
 
+
+/**
+ * Establish a connection with the database. Return the mongoose.connection
+ * promise object.
+ */
+App.prototype.setupDB = function() {
+  mongoose.connect(config.dbURI); 
+  var db = mongoose.connection;
+  
+  db.on('error', function(err) { 
+    if(err) logger.error('sucka.App.setupDB mongo connect error ' + err);
+  });
+
+  return db;
+};
 
 /** 
  * Messaging between components is handled with a global, in-memory bus. 
@@ -242,19 +267,8 @@ App.prototype.postSuck = function(source) {
  *
  */
 App.prototype.getSources = function() {
-  // @TODO retrieve from database, obvs
-
-  var mockDBObj = [{
-      frequency: "always",
-      hasRun: false,
-      sourceType: "twitter",
-      id: "abcdef123",
-      searchTerms: ["#ValentinesDay"]
-    }];
-
-  return new Promise(function (resolve, reject) {
-    resolve(mockDBObj);
-  });
+  var query = store.Source.find({status: 'active'});
+  return query.exec();
 };
 
 if(require.main === module) (new App()).start()
