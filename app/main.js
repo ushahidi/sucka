@@ -2,6 +2,7 @@ var config = require('config')
   , logger = require('winston')
   , kue = require('kue')
   , _ = require("underscore")
+  , moment = require('moment')
   , redis = require("redis")
   , mongoose = require('mongoose')
   , suckas = require('require-all')(__dirname + '/modules/suckas')
@@ -258,18 +259,19 @@ App.prototype.suckIt = function(source, done) {
  * @param {Object} source - Source model instance
  */
 App.prototype.postSuck = function(source, docs) {
-  // @TODO
-  // if this is a one-time suck, mark document as such
-  // update source lastRun with current timestamp
-  // determine if we should schedule another suck for this source
-  console.log("post suck "+source);
-
-  this.transformQueue.publish("transform", JSON.stringify({id:source.id}));
+  source.lastRun = Date.now();
+  source.hasRun = true;
+  source.save();
+  
+  // Each of the documents is passed to the transformation pipeline
+  _.each(docs, function(doc) {
+      this.transformQueue.publish("transform", JSON.stringify({id:doc.id}));
+  });
 
   if(source.frequency === "repeats") {
-    this.suckaQueue.create(source.id, {source:source}).delay(1000).save();
+    var repeatDelay = source.repeatMilliseconds();
+    this.suckaQueue.create(source.id, {source:source}).delay(repeatDelay).save();
   }
-
   
 };
 

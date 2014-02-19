@@ -36,6 +36,23 @@ describe('Source', function(){
     });
   });
 
+  it('should convert repeat interval to milliseconds', function(done){
+    var sourceData = {
+      sourceType: "twitter",
+      frequency: "repeats",
+      repeatsEvery: "minute",
+      startDate: Date.now(),
+      endDate: Date.now()
+    };
+
+    var sourceModel = new Source(sourceData);
+    sourceModel.save(function(err, source) {
+      assert.isNull(err);
+      assert(source.repeatMilliseconds() === 60000);
+      done();
+    });
+  });
+
   it('should throw an error for a bad status', function(done){
     var sourceData = {
       sourceType: "twitter",

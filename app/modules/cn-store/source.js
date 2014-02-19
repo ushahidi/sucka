@@ -61,6 +61,22 @@ var sourceSchema = mongoose.Schema({
     //createdBy: User
 });
 
+sourceSchema.methods.repeatMilliseconds = function() {
+  var msDict = {
+    minute: 60000,
+    hour: 3600000,
+    day: 86400000,
+    week: 604800000
+  };
+
+  if (this.repeatsEvery && msDict[this.repeatsEvery]) {
+    return msDict[this.repeatsEvery];
+  }
+  else {
+    throw "Can't call repeatMilliseconds if repeatsEvery property is not set"
+  }
+};
+
 sourceSchema.statics.findActive = function() {
   var now = Date.now();
   var query = this.find({
