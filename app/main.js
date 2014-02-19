@@ -35,7 +35,7 @@ App.prototype.start = function() {
 
   this.db = this.setupDB();
   this.db.once('open', function() {
-    that.getSources().then(function(sources) {
+    store.Source.findActive().then(function(sources) {
       that.initiateSucking(sources);
     });
   });
@@ -259,16 +259,6 @@ App.prototype.postSuck = function(source) {
   }
 
   
-};
-
-
-/** 
- * Get a list of active sources from the database.
- *
- */
-App.prototype.getSources = function() {
-  var query = store.Source.find({status: 'active'});
-  return query.exec();
 };
 
 if(require.main === module) (new App()).start()

@@ -37,17 +37,28 @@ TwitterSucka.prototype.suck = function() {
 TwitterSucka.prototype.transform = function(inputData) {
   var outputData = inputData.map(function(tweet) {
     return {
-      source: "twitter",
-      author: {
-        name: tweet.user.name,
-        timezone: tweet.user.time_zone
+      remoteID: tweet.id_str,
+      lifespan: "temporary",
+      content: tweet.text,
+      geo: {
+        namedPlaces: [tweet.place],
+        coordinates: tweet.coordinates,
+        locationIdentifiers: {
+          authorTimeZone: tweet.user.time_zone,
+          authorLocationName: tweet.user.location
+        }
       },
-      content: tweet.text
+      language: {
+        code: tweet.lang,
+      },
+      source: "twitter"
     }
   });
 
   //that.handleError(error);
   this.allFinished(outputData);
+
+  return outputData;
 };
 
 module.exports = TwitterSucka;

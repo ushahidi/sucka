@@ -5,7 +5,6 @@ var expect = chai.expect
   , config = require('config')
   , mongoose = require('mongoose')
   , store = require('../app/modules/cn-store')
-  , connect = store.connect
   , Source = store.Source
   , clearDB  = require('mocha-mongoose')(config.dbURI)
   , moment = require('moment')

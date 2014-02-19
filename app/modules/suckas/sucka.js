@@ -53,11 +53,15 @@ Sucka.prototype.transform = function(inputData) {
  * @param {Array} transformedData - List of transformed objects to be indexed
  */ 
 Sucka.prototype.allFinished = function(transformedData) {
+  if(!this.bus) return;
+
   this.bus.emit("data", transformedData, this.source, this.done);
 };
 
 
 Sucka.prototype.handleError = function(error) {
+  if(!this.bus) return;
+
   this.bus.emit("error", error, this.source, this.done);
 };
 

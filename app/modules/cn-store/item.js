@@ -25,6 +25,7 @@ validator.extend('isLanguage', function () {
  */
 validator.extend('containsTags', function() {
     var tags = this.str.split(",");
+    if(_.isEmpty(tags) || tags[0] === "") return true;
     return _.difference(tags, allowedTags).length === 0;
 });
 
@@ -93,6 +94,10 @@ var itemSchema = mongoose.Schema({
       granularity: {
         type: String,
         validate: validate('isIn', ['point', 'neighborhood', 'city', 'admin', 'country'])
+      },
+      locationIdentifiers: {
+        authorLocationName: String,
+        authorTimeZone: String
       }
     },
     /**
@@ -101,7 +106,7 @@ var itemSchema = mongoose.Schema({
      */
     tags: {
       type: Array,
-      validate: validate({passIfEmpty: true}, 'containsTags'), 
+      validate: validate('containsTags'), 
       index: true
     },
     /**
