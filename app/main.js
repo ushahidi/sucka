@@ -3,7 +3,8 @@ var config = require('config')
   , kue = require('kue')
   , _ = require("underscore")
   , moment = require('moment')
-  , redis = require("redis")
+  , redis = require('redis')
+  , RedisQueue = require("simple-redis-queue")
   , mongoose = require('mongoose')
   , suckas = require('require-all')(__dirname + '/modules/suckas')
   , Promise = require('promise')
@@ -26,7 +27,7 @@ var App = function() {};
 App.prototype.start = function() {
   var that = this;
 
-  this.transformQueue = redis.createClient();
+  this.transformQueue = new RedisQueue(redis.createClient());
   this.suckaQueue = kue.createQueue();
 
   this.processErrorHandling();
@@ -67,7 +68,7 @@ App.prototype.processErrorHandling = function() {
     function(e) {
       var matches = e.stack.match(/modules\/suckas\/([\w-]+)\.js/);
       if(matches) {
-        logger.error("Bad sucka! " + matches[1]);
+        logger.error("sucka.App.processErrorHandling broken sucka! " + matches[1]);
         that.bus.emit("error", {sourceType: matches[1]}, null, e.message);
       }
       else {
@@ -113,6 +114,8 @@ App.prototype.setupBus = function() {
      * @param {function} done - callback for queue when task is complete
      */
     function(data, source, done) { 
+      logger.info("sucka.App.setupBus storing data " + JSON.stringify(data));
+
       store.Item.saveList(data)
       .then(
         function(items) {
@@ -169,9 +172,11 @@ App.prototype.getSuckaForSource = function(source) {
  * @param {Object} error
  */
 App.prototype.handleBrokenSource = function(source, data, error) {
-  // @TODO mark source.status as failing
+  source.status = 'failing';
+  source.failData = data;
+  source.save();
 
-  console.log(source, error);
+  logger.error("sucka.App.handleBrokenSource " + error);
 };
 
 
@@ -259,13 +264,17 @@ App.prototype.suckIt = function(source, done) {
  * @param {Object} source - Source model instance
  */
 App.prototype.postSuck = function(source, docs) {
+  var that = this;
+  logger.info("sucka.App.postSuck for source " + JSON.stringify(source));
+
   source.lastRun = Date.now();
   source.hasRun = true;
   source.save();
   
   // Each of the documents is passed to the transformation pipeline
   _.each(docs, function(doc) {
-      this.transformQueue.publish("transform", JSON.stringify({id:doc.id}));
+      logger.info("sucka.App.postSuck transformQueue publish " + JSON.stringify({id:doc.id}));
+      that.transformQueue.push("transform", JSON.stringify({id:doc.id}));
   });
 
   if(source.frequency === "repeats") {

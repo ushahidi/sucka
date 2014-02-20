@@ -57,7 +57,13 @@ var sourceSchema = mongoose.Schema({
       validate: validate('isIn', ['active', 'failing', 'inactive'])
     },
     lastRun: Date,
-    filters: mongoose.Schema.Types.Mixed 
+    filters: mongoose.Schema.Types.Mixed,
+    /**
+     * External data is a gnarly, dangerous beast. It will inevitably break
+     * our application from time to time. When it does, we capture it here, 
+     * so developers can test failing sources.
+     */
+    failData: mongoose.Schema.Types.Mixed
     //createdBy: User
 });
 
