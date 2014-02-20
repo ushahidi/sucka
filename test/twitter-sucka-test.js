@@ -6,7 +6,7 @@ var config = require('config')
   , assert = chai.assert
   , mongoose = require('mongoose')
   , clearDB  = require('mocha-mongoose')(config.dbURI)
-  , store = require('../app/modules/cn-store')
+  , store = require('../app/modules/cn-store-js')
   , Twitter = require('../app/modules/suckas/twitter');
 
 describe('twitter sucka', function(){

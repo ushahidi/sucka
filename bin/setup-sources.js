@@ -1,6 +1,6 @@
 var config = require('config')
   , mongoose = require('mongoose')
-  , store = require('../app/modules/cn-store')
+  , store = require('../app/modules/cn-store-js')
   , moment = require('moment');
 
 mongoose.connect(config.dbURI); 

@@ -9,7 +9,7 @@ var config = require('config')
   , suckas = require('require-all')(__dirname + '/modules/suckas')
   , Promise = require('promise')
   , EventEmitter = require('events').EventEmitter
-  , store = require("./modules/cn-store");
+  , store = require("./modules/cn-store-js");
 
 
 // Start kue web server on port 3000
