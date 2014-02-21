@@ -122,7 +122,7 @@ App.prototype.setupBus = function() {
       store.Item.saveList(data)
       .then(
         function(items) {
-          // No matter what et queue know that task has been completed
+          // No matter what let queue know that task has been completed
           done();
 
           that.postSuck(source.id, items);

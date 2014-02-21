@@ -43,7 +43,7 @@ TwitterSucka.prototype.suck = function() {
 
   T.get('search/tweets', { 
       q: q, 
-      count: 5 
+      count: 25 
     }, function(err, reply) {
       if (err) return that.handleError(err);
       that.transform(reply.statuses);

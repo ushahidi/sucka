@@ -1,3 +1,8 @@
 {
-  "dbURI": "mongodb://localhost/crisisnet_test"
+  "dbURI": "mongodb://localhost/crisisnet_test",
+  "facebook": {
+    "clientToken": "107f807339bc88f237bf8be52d248217",
+    "appSecret": "a9b416969d73b6b60d528a4a82a90576",
+    "appID": "249359178569094"
+  }
 }
