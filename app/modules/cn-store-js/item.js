@@ -184,6 +184,35 @@ itemSchema.methods.saveP = function() {
 };
 
 
+itemSchema.statics.upsert = function(itemData) {
+  var that = this;
+  return new Promise(function(resolve, reject) {
+    that.findOne(
+      // query conditions
+      {
+        remoteID: itemData.remoteID,
+        source: itemData.source  
+      },
+      // callback
+      function(err, item) {
+        if(err) return reject(err);
+        
+        // we did not find an item matching the query conditions, so make one
+        if(!item) {
+          item = new that(itemData);
+        }
+        // extend the item we found with new data
+        else {
+          _(item).extend(itemData);
+        }
+
+        // return a promise
+        resolve(item.saveP());
+      }
+    );
+  });
+};
+
 /**
  * Take an array of objects that conform to Item schema. Generate a list of 
  * promises, and return the promise object that results from calling `Promise.all` 
@@ -199,7 +228,7 @@ itemSchema.statics.saveList = function(data) {
   var that = this;
   // Create a list of promises. 
   var funcs = _(data).map(function(item) { 
-    return (new that(item)).saveP();
+    return that.upsert(item);
   });
 
   return Promise.all(funcs);
