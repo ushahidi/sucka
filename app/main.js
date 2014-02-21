@@ -25,6 +25,7 @@ var App = function() {};
 
 
 App.prototype.start = function() {
+  logger.info("sucka starting");
   var that = this;
 
   this.transformQueue = new RedisQueue(redis.createClient());
@@ -37,7 +38,9 @@ App.prototype.start = function() {
 
   this.db = this.setupDB();
   this.db.once('open', function() {
+    logger.info("sucka db ready");
     store.Source.findActive().then(function(sources) {
+      logger.info("sucka initiating sucking for " + JSON.stringify(sources));
       that.initiateSucking(sources);
     });
   });
@@ -114,14 +117,15 @@ App.prototype.setupBus = function() {
      * @param {function} done - callback for queue when task is complete
      */
     function(data, source, done) { 
-      logger.info("sucka.App.setupBus storing data " + JSON.stringify(data));
+      logger.info("sucka.App.setupBus storing data " + _(data).pluck("remoteID").toString());
 
       store.Item.saveList(data)
       .then(
         function(items) {
-          that.postSuck(source, items);
           // No matter what et queue know that task has been completed
           done();
+
+          that.postSuck(source.id, items);
         },
         function(err) {
           /**
@@ -172,11 +176,11 @@ App.prototype.getSuckaForSource = function(source) {
  * @param {Object} error
  */
 App.prototype.handleBrokenSource = function(source, data, error) {
+  logger.error("sucka.App.handleBrokenSource SOURCE ERROR " + source.id + " | " + error);
+
   source.status = 'failing';
   source.failData = data;
   source.save();
-
-  logger.error("sucka.App.handleBrokenSource " + error);
 };
 
 
@@ -194,7 +198,8 @@ App.prototype.initiateSucking = function(sources) {
     if(source.frequency === "repeats") {
       // Perform a suck whenever this source has an active task in the queue. 
       // We use the source.id (string) as the task `type`/event name. 
-      this.suckaQueue.process(source.id, function(task, done) {
+      that.suckaQueue.process(source.id, function(task, done) {
+        logger.info("sucka.App processing task " + task);
         that.suckIt(task.data.source, done);
       });
     }
@@ -227,10 +232,15 @@ App.prototype.shouldSuck = function(source) {
     if(source.frequency === "always") resolve(true)
     else if(source.frequency === "once" && source.hasRun === false) resolve(true)
     else if(source.frequency === "repeats") {
-      // If we don't have any active or delayed (scheduled) tasks, suck it
-      kue.Job.rangeByType(source.id,'active,delayed', 0, 10, '', function (err, jobs) {
+      // If we don't have any scheduled tasks, suck it
+      kue.Job.rangeByType(source.id,'delayed', 0, 10, '', function (err, jobs) {
           if (err) return that.bus.emit("error", err, source)
-          if (!jobs.length) resolve(true);
+          if (jobs.length) {
+            resolve(false);
+          }
+          else {
+            resolve(true);
+          }
       });
     }
     else {
@@ -263,25 +273,51 @@ App.prototype.suckIt = function(source, done) {
  *
  * @param {Object} source - Source model instance
  */
-App.prototype.postSuck = function(source, docs) {
+App.prototype.postSuck = function(sourceID, docs) {
   var that = this;
-  logger.info("sucka.App.postSuck for source " + JSON.stringify(source));
+  logger.info("sucka.App.postSuck for source " + sourceID);
 
-  source.lastRun = Date.now();
-  source.hasRun = true;
-  source.save();
-  
+  store.Source.findById(sourceID, function(err, source) {
+    source.lastRun = Date.now();
+    source.hasRun = true;
+
+    // Some services allow us to query "since" a specific ID. So we find the 
+    // latest item (relative to its publish time) and set the Source document's
+    // lastRetrievedRemoteID to the remoteID of that item. 
+    var lastRetrievedDoc = _(_(docs).sortBy(function(doc) {
+      return (new Date(doc.publishedAt)).getTime();
+    })).last();
+
+    if(lastRetrievedDoc) {
+      source.lastRetrievedRemoteID = lastRetrievedDoc.remoteID;
+    }
+
+    // Once the source's properties have been updated, save the changes to the 
+    // database and schedule a task so this source is sucked again according to 
+    // its repeat schedule. 
+    source.save(function(err) {
+      if(err) return that.handleBrokenSource(source, null, err);
+
+      logger.info("sucka.App.postSuck source saved " + source.id);
+      
+      if(source.frequency === "repeats") {
+        var repeatDelay = source.repeatMilliseconds();
+        that.suckaQueue.create(source.id, {source:source})
+          .delay(repeatDelay)
+          .save(function(err, state) {
+            if(err) return that.handleBrokenSource(source, null, err);
+
+            logger.info("sucka.App.postSuck task created " + source.id);
+          });
+      }
+    });
+  });
+
   // Each of the documents is passed to the transformation pipeline
   _.each(docs, function(doc) {
       logger.info("sucka.App.postSuck transformQueue publish " + JSON.stringify({id:doc.id}));
       that.transformQueue.push("transform", JSON.stringify({id:doc.id}));
   });
-
-  if(source.frequency === "repeats") {
-    var repeatDelay = source.repeatMilliseconds();
-    this.suckaQueue.create(source.id, {source:source}).delay(repeatDelay).save();
-  }
-  
 };
 
 if(require.main === module) (new App()).start()

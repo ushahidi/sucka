@@ -57,6 +57,12 @@ var sourceSchema = mongoose.Schema({
       validate: validate('isIn', ['active', 'failing', 'inactive'])
     },
     lastRun: Date,
+    /**
+     * Some services allow us to search "since" an id, so we store the id of 
+     * most-recently retrieved record along with the date/time this sucka was 
+     * last run. 
+     */
+    lastRetrievedRemoteID: String,
     filters: mongoose.Schema.Types.Mixed,
     /**
      * External data is a gnarly, dangerous beast. It will inevitably break
@@ -92,6 +98,18 @@ sourceSchema.statics.findActive = function() {
   });
   return query.exec();
 };
+
+// specify the transform schema option
+if (!sourceSchema.options.toObject) sourceSchema.options.toObject = {};
+sourceSchema.options.toObject.transform = function (doc, ret, options) {
+  ret.id = doc.id;
+}
+
+// specify the transform schema option
+if (!sourceSchema.options.toJSON) sourceSchema.options.toJSON = {};
+sourceSchema.options.toJSON.transform = function (doc, ret, options) {
+  ret.id = doc.id;
+}
 
 sourceSchema.pre("save",function(next, done) {
     var self = this;
