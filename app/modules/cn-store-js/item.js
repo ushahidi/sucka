@@ -135,8 +135,8 @@ var itemSchema = mongoose.Schema({
      */
     language: {
       code: {
-        type: String,
-        validate: validate('isLanguage')
+        type: String
+        //validate: validate({passIfEmpty: true}, 'isLanguage')
       },
       name: String,
       nativeName: String

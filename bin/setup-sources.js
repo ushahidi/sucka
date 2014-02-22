@@ -25,6 +25,34 @@ db.once('open', function() {
       console.log("Twitter saved");
       console.log(source);
     });
+
+    var facebook = new store.Source({
+      sourceType: "facebook",
+      frequency: "repeats",
+      repeatsEvery: "minute",
+      startDate: moment().subtract('m', 1),
+      endDate: moment().add('d', 1),
+      filters: {
+        searchString: "nairobi traffic"
+      }
+    });
+
+    facebook.save(function(err, source) {
+      console.log("Facebook saved");
+      console.log(source);
+    });
+
+    var kenyaTraffic = new store.Source({
+      sourceType: "kenya-traffic-incidents-2011",
+      frequency: "once",
+      startDate: moment().subtract('m', 1),
+      endDate: moment().add('d', 1)
+    });
+
+    kenyaTraffic.save(function(err, source) {
+      console.log("Kenya Traffic saved");
+      console.log(source);
+    });
   });
 });
 

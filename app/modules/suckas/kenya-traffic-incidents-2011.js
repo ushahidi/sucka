@@ -28,7 +28,7 @@ KenyaTraffic.prototype.transform = function(inputData) {
   var outputData = inputData.map(function(record) {
     return {
       remoteID: record.Serial,
-      publishedAt: moment(record['Date (YMD)']),
+      publishedAt: new Date(moment(record['Date (YMD)'])),
       lifespan: "temporary",
       content: _s.titleize(record.Event.toLowerCase()) + ': ' + record['Description of Cause'],
       geo: {

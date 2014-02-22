@@ -24,9 +24,13 @@ FacebookSucka.prototype.suck = function() {
     .then(function(token) {
       graph.setAccessToken(token);
       var searchOptions = {
-          q:     "nairobi traffic"
+          q:     that.source.filters.searchString
         , type:  "post"
       };
+
+      if(that.source.lastRun) {
+        searchOptions.since = moment(that.source.lastRun).unix();
+      }
 
       graph.search(searchOptions, function(err, res) {
         that.transform(res.data); 
@@ -63,7 +67,7 @@ FacebookSucka.prototype.transform = function(inputData) {
   var outputData = inputData.map(function(post) {
     return {
       remoteID: post.id,
-      publishedAt: moment(post.created_time),
+      publishedAt: new Date(moment(post.created_time)),
       lifespan: "temporary",
       content: post.message || post.story,
       source: "facebook"

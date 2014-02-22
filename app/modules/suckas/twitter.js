@@ -58,7 +58,7 @@ TwitterSucka.prototype.transform = function(inputData) {
   var outputData = inputData.map(function(tweet) {
     return {
       remoteID: tweet.id_str,
-      publishedAt: moment(tweet.created_at),
+      publishedAt: new Date(moment(tweet.created_at)),
       lifespan: "temporary",
       content: tweet.text,
       geo: {

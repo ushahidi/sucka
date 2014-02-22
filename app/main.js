@@ -17,6 +17,8 @@ var config = require('config')
 var kue = require('kue');
 kue.app.listen(3000);
 
+//return;
+
 /**
  * Entry point for sucka application.
  * @constructor
