@@ -7,7 +7,8 @@ var expect = chai.expect
   , store = require('../app/modules/cn-store-js')
   , connect = store.connect
   , Item = store.Item
-  , clearDB  = require('mocha-mongoose')(config.dbURI);
+  , clearDB  = require('mocha-mongoose')(config.dbURI)
+  , _ = require("underscore");
 
 describe('Item', function(){
   beforeEach(function(done) {
@@ -160,6 +161,58 @@ describe('Item', function(){
       assert(item.summary.length <= 110); // Technically this is cut off at 100 but cutting some slack
       done();
     });
+  });
+
+  it('should not create duplicate records for the same remoteID', function(done) {
+    var itemData = [{
+      remoteID: 1,
+      tags: ["health", "injury"],
+      source: "twitter"
+    },
+    {
+      remoteID: 2,
+      tags: ["weather", "storm"],
+      source: "twitter"
+    }];
+
+    // Note that slick promise interface. Sweeeeeet
+    var promise = Item.saveList(itemData);
+
+    promise.then(function(items) {
+      var allItems = Item.find(function(err, allItems) {
+        assert(allItems.length === 2);
+
+        // this record should be updated, because it has a remoteID and 
+        // source that are already in the db
+        var newItemData = [{
+          remoteID: 1,
+          tags: ["health", "injury", "accident"],
+          source: "twitter"
+        },
+        // this item should be created, because there is no remoteID 2 for
+        // sourceType facebook.
+        {
+          remoteID: 2,
+          tags: ["weather", "storm"],
+          source: "facebook"
+        }];
+
+        var promise2 = Item.saveList(newItemData).then(function(newItems) {
+          var newAllItems = Item.find(function(err, newAllItems) {
+            assert(newAllItems.length === 3);
+            var twit1 = _(newAllItems).findWhere({remoteID: "1"});
+            assert.isDefined(twit1);
+            assert(twit1.tags.length === 3);
+            done();
+          });
+        });
+      });
+    }, function(err) {
+      assert.isNotNull(err);
+      done(err);
+    });
+
+
   });
 
 })
