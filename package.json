@@ -33,7 +33,8 @@
     "async": "~0.2.10",
     "simple-redis-queue": "~0.9.3",
     "fbgraph": "~0.2.9",
-    "fb": "~0.6.2"
+    "fb": "~0.6.2",
+    "fast-csv": "0.0.3"
   },
   "devDependencies": {
     "mocha": "1.13.0",

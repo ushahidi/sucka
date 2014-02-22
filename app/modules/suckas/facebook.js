@@ -29,7 +29,7 @@ FacebookSucka.prototype.suck = function() {
       };
 
       graph.search(searchOptions, function(err, res) {
-        that.transform(res.data); // {data: [{id: xxx, from: ...}, {id: xxx, from: ...}]}
+        that.transform(res.data); 
       });
 
     }, function(err) {

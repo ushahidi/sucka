@@ -85,10 +85,20 @@ var itemSchema = mongoose.Schema({
     },
     geo: {
       /**
-       * This is assuming that we'll extract all of the named places from the 
-       * content and/or source document. 
+       * Known address components.  
        */
-      namedPlaces: Array,
+      addressComponents: {
+        formattedAddress: String,
+        streetNumber: String,
+        streetName: String,
+        neighborhood: String,
+        adminArea5: String, // city
+        adminArea4: String, // county
+        adminArea3: String, // state
+        adminArea2: String, // region
+        adminArea1: String, // country
+        postalCode: String
+      },
       /**
        * Note that coordinates should always been longitude, latitude
        */
@@ -101,6 +111,10 @@ var itemSchema = mongoose.Schema({
         type: String,
         validate: validate('isIn', ['point', 'neighborhood', 'city', 'admin', 'country'])
       },
+      /**
+       * Unlike address components above, these are clues to the location of 
+       * the content.
+       */
       locationIdentifiers: {
         authorLocationName: String,
         authorTimeZone: String

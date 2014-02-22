@@ -4,5 +4,10 @@ module.exports = [
   'storm',
   'hospital',
   'health',
-  'police'
+  'police',
+  'traffic',
+  'road',
+  'accident',
+  'death',
+  'injury'
 ]

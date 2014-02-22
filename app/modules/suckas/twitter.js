@@ -62,7 +62,6 @@ TwitterSucka.prototype.transform = function(inputData) {
       lifespan: "temporary",
       content: tweet.text,
       geo: {
-        namedPlaces: [tweet.place],
         coordinates: tweet.coordinates,
         locationIdentifiers: {
           authorTimeZone: tweet.user.time_zone,
