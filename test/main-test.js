@@ -4,7 +4,8 @@ var expect = chai.expect
   , assert = chai.assert
   , App = require('../app/main')
   , app = new App()
-  , Twitter = require('../app/modules/suckas/twitter');
+  , Twitter = require('../app/modules/suckas/twitter')
+  , moment = require("moment");
 
 describe('app', function(){
   describe('#getSuckaForSource()', function(){
@@ -58,9 +59,11 @@ describe('app', function(){
 
     it('should suck a one-time source that has not sucked', function(done) {
       var source = {
+        sourceType: "kenya-traffic-incidents-2011",
         frequency: "once",
-        hasRun: false,
-        sourceType: "twitter"
+        startDate: moment().subtract('m', 1),
+        endDate: moment().add('d', 1),
+        hasRun: false
       };
 
       app.shouldSuck(source).then(function(shouldSuck) {

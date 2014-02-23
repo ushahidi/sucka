@@ -42,7 +42,7 @@ App.prototype.start = function() {
   this.db.once('open', function() {
     logger.info("sucka db ready");
     store.Source.findActive().then(function(sources) {
-      logger.info("sucka initiating sucking for " + JSON.stringify(sources));
+      logger.info("sucka initiating sucking for " + _(sources).pluck("id").toString());
       that.initiateSucking(sources);
     });
   });
@@ -159,10 +159,17 @@ App.prototype.setupBus = function() {
  * @param {Object} source - Source model instance 
  */
 App.prototype.getSuckaForSource = function(source) {
-  if(source.frequency === "once" && source.hasRun) return null;
+  if(source.frequency === "once" && source.hasRun) {
+    logger.info("sucka.App.getSuckaForSource skipping " + source.sourceType);
+    return null;
+  }
   var Sucka = suckas[source.sourceType];
-  if(typeof Sucka === "undefined") return null;
+  if(typeof Sucka === "undefined") {
+    logger.warn("sucka.App.getSuckaForSource no sucka for " + source.sourceType);
+    return null;
+  }
 
+  logger.info("sucka.App.getSuckaForSource found sucka for " + source.sourceType);
   return Sucka;
 };
 
@@ -210,7 +217,10 @@ App.prototype.initiateSucking = function(sources) {
     // to be sucked for the first time, even if they'll repeat. Find 'em and
     // suck 'em.
     that.shouldSuck(source).then(function(shouldSuck) {
-      if(shouldSuck) that.suckIt(source)
+      if(shouldSuck) {
+        logger.info("sucka.App.initiateSucking should suck " + source.id);
+        that.suckIt(source);
+      }
     });
   });
 };
