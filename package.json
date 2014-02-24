@@ -5,7 +5,7 @@
   "description": "A framework for sucking data into CrisisNet",
   "scripts": {
     "dev-server": "NODE_ENV=development nodemon app/main.js",
-    "qa-server": "NODE_ENV=staging nodemon app.js",
+    "staging-server": "NODE_ENV=staging nodemon app/main.js",
     "prod-server": "NODE_ENV=production node app.js",
     "run-test": "NODE_ENV=test mocha",
     "setup-sources": "NODE_ENV=development node bin/setup-sources.js",
