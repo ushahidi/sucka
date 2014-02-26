@@ -102,7 +102,10 @@ var itemSchema = mongoose.Schema({
       /**
        * Note that coordinates should always been longitude, latitude
        */
-      coordinates: Array,
+      coordinates: {
+        index: '2dsphere',
+        type: [Number]
+      },
       /**
        * How accurate are the coordinates? Defined as radius, in meters.
        */
@@ -248,7 +251,15 @@ itemSchema.statics.saveList = function(data) {
   return Promise.all(funcs);
 };
 
-itemSchema.index({ "geo.coordinates": "2d" });
+
+itemSchema.pre('save', function (next) {
+  var coords = this.geo.coordinates;
+  if (this.isNew && (Array.isArray(coords) && 0 === coords.length) || this.geo.coordinates === null) {
+    this.geo.coordinates = undefined;
+  }
+
+  next();
+})
 
 var Item = mongoose.model('Item', itemSchema);
 
