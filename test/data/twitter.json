@@ -52,7 +52,14 @@
         "notifications": null
     },
     "geo": null,
-    "coordinates": null,
+    "coordinates": {
+        "coordinates":
+        [
+            -75.14310264,
+            40.05701649
+        ],
+        "type":"Point"
+    },
     "place": null,
     "contributors": null,
     "retweeted_status": {

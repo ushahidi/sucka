@@ -175,6 +175,7 @@ describe('Item', function(){
       source: "twitter"
     }];
 
+
     // Note that slick promise interface. Sweeeeeet
     var promise = Item.saveList(itemData);
 
@@ -197,7 +198,8 @@ describe('Item', function(){
           source: "facebook"
         }];
 
-        var promise2 = Item.saveList(newItemData).then(function(newItems) {
+
+        var promise2 = Item.saveList(newItemData, ["remoteID", "source"]).then(function(newItems) {
           var newAllItems = Item.find(function(err, newAllItems) {
             assert(newAllItems.length === 3);
             var twit1 = _(newAllItems).findWhere({remoteID: "1"});
