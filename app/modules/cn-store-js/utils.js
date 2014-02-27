@@ -30,7 +30,18 @@ methods.saveP = function() {
 statics.upsert = function(data, conditions) {
   var that = this;
   return new Promise(function(resolve, reject) {
-    that.findOne(conditions,
+    /** 
+     * Iterate over each passed property. Because these can be dot-delimited 
+     * paths (like for the param `{"my.nested.property": obj.my.nested.property }`), 
+     * we may need to drill down to the correct level of the passed object, hence 
+     * the `reduce` step.
+     */
+    var upsertConditions = {};
+    _.each(conditions, function(prop) {
+      var objProp = _.reduce(prop.split("."), function(memo, prop) { return memo[prop] }, data);
+      upsertConditions[prop] = objProp;
+    }); 
+    that.findOne(upsertConditions,
       // callback
       function(err, obj) {
         if(err) return reject(err);
@@ -67,11 +78,7 @@ statics.saveList = function(data, upsertProperties) {
   var that = this;
   // Create a list of promises. 
   var funcs = _(data).map(function(obj) {
-    var upsertConditions = {};
-    _.each(upsertProperties, function(prop) {
-      upsertConditions[prop] = obj[prop];
-    }); 
-    return that.upsert(obj, upsertConditions);
+    return that.upsert(obj, upsertProperties);
   });
 
   return Promise.all(funcs);
