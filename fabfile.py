@@ -19,7 +19,6 @@ def staging():
     env.key_filename = ''
     env.branch = 'development'
     env.upstart_script = 'sucka.conf'
-    env.nginx_conf = ''
     env.settings_file = 'staging.json'
 
 
@@ -30,7 +29,6 @@ def production():
     env.key_filename = ''
     env.branch = 'master'
     env.upstart_script = ''
-    env.nginx_conf = ''
     env.settings_file = 'production.json'
 
 
