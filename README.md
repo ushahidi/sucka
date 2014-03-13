@@ -24,6 +24,10 @@ Then clone this repository using git.
 
     git clone https://github.com/ushahidi/sucka.git
 
+That should create a "sucka" directory. Change into that new directory.
+
+    cd sucka
+
 Once that's finished, you'll need to install the project dependencies. This is easy with Node's package manager, called `npm`.
 
     npm install
