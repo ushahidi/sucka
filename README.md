@@ -14,6 +14,15 @@ Need a data source sucked? We can make that happen. Here's how to contribute you
 2. MongoDB ([download instructions](http://docs.mongodb.org/manual/installation/))
 3. Git ([download/setup instructions](https://help.github.com/articles/set-up-git))
 
+### For Experienced Node.js Developers
+
+1. Clone this repo and install dependencies
+2. Create a module that subclasses `Sucka` (see examples in `app/modules/suckas`)
+3. Add a test to the `test` directory (run tests with `npm run-script run-test`)
+4. Create a new branch for your feature and make a pull request
+
+### For Everyone Else 
+
 Word to the wise: if you are totally unfamiliar with Node.js, there's a bit of a learning curve, but plenty of examples. Once you have everything downloaded...
 
 Open your terminal/command line app and change into whatever directory you'd like to house this project. For example:
@@ -79,7 +88,7 @@ The `this` keyword in JavaScript can be confusing, but the `that = this` line ju
 
 #### Step 4: Transform that data
 
-Now you assign values from your newly parsed CSV data to properties in the CrisisNET schema. Almost all data from `sucka` modules is saved as `Item` documents. Check out the `Item` [definition](https://github.com/ushahidi/sucka/blob/master/app/modules/cn-store-js/item.js), or [some example JSON data](https://github.com/ushahidi/sucka/blob/master/test/data/twitter-formatted.json) for more details. Note that `//` in JavaScript is a single line comment. 
+Now you assign values from your newly parsed CSV data to properties in the CrisisNET schema. Almost all data from `sucka` modules is saved as `Item` documents. *If you haven't made a `sucka` before, we strongly recommended you Check out the `Item` [definition](https://github.com/ushahidi/sucka/blob/master/app/modules/cn-store-js/item.js), or [some example JSON data](https://github.com/ushahidi/sucka/blob/master/test/data/twitter-formatted.json) for more details. Note that `//` in JavaScript is a single line comment. 
 
     KenyaTraffic.prototype.transform = function(inputData) {
       var outputData = {
