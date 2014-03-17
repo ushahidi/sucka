@@ -20,7 +20,7 @@ describe('Item', function(){
   it('should create and save an Item model', function(done){
     var itemData = {
       remoteID: 1,
-      tags: ["health", "police"]
+      tags: [{name: "health"}, {name: "police"}]
     };
 
     var item = new Item(itemData);
@@ -37,7 +37,7 @@ describe('Item', function(){
   it('should create and save an Item model and return a promise!', function(done){
     var itemData = {
       remoteID: 1,
-      tags: ["health", "police"]
+      tags: [{name: "health"}, {name: "police"}]
     };
 
     var item = new Item(itemData);
@@ -60,11 +60,11 @@ describe('Item', function(){
   it('should create and save a list of Item models and return a promise!', function(done){
     var itemData = [{
       remoteID: 1,
-      tags: ["health", "police"]
+      tags: [{name: "health"}, {name: "police"}]
     },
     {
       remoteID: 2,
-      tags: ["weather", "storm"]
+      tags: [{name: "weather"}, {name: "storm"}]
     }];
 
     // Note that slick promise interface. Sweeeeeet
@@ -90,11 +90,11 @@ describe('Item', function(){
   it('should create invoke the error function when bad data is present', function(done){
     var itemData = [{
       remoteID: 1,
-      tags: ["health", "laksdjflkasjdflkasjdlfkj"]
+      tags: [{name: "health"}, {name: "asdfasdfasdf"}]
     },
     {
       remoteID: 2,
-      tags: ["weather", "storm"]
+      tags: [{name: "weather"}, {name: "storm"}]
     }];
 
     // Note that slick promise interface. Sweeeeeet
@@ -105,8 +105,7 @@ describe('Item', function(){
       done(items);
     }, function(err) {
       assert.isNotNull(err);
-      // Make sure that tags validation threw the error
-      assert.isDefined(err.errors.tags);
+      assert(err.message === "Invalid tag(s): asdfasdfasdf");
       done();
     });
   });
@@ -114,13 +113,13 @@ describe('Item', function(){
   it('should raise a validation error for bad tags', function(done) {
     var itemData = {
       remoteID: 1,
-      tags: ["mymilkshakebringsalltheboystotheyard", "police"]
+      tags: [{name: "mymilkshakebringsalltheboystotheyard"}, {name: "police"}]
     };
 
     var item = new Item(itemData);
     item.save(function(err, item) {
       assert.isNotNull(err);
-      assert.isDefined(err.errors.tags);
+      assert(err.message === "Invalid tag(s): mymilkshakebringsalltheboystotheyard");
       done();
     });
   });
@@ -128,7 +127,7 @@ describe('Item', function(){
   it('should set the language property from only the ISO code', function(done) {
     var itemData = {
       remoteID: 1,
-      tags: ["police"],
+      tags: [{name: "police"}],
       language: {
         code: "en",
         name: "LALALALALA"
@@ -146,7 +145,7 @@ describe('Item', function(){
   it('should create a summary if content is provided', function(done) {
     var itemData = {
       remoteID: 1,
-      tags: ["police"],
+      tags: [{name: "police"}],
       language: {
         code: "en",
         name: "LALALALALA"
@@ -166,12 +165,12 @@ describe('Item', function(){
   it('should not create duplicate records for the same remoteID', function(done) {
     var itemData = [{
       remoteID: 1,
-      tags: ["health", "injury"],
+      tags: [{name:"health"}, {name:"injury"}],
       source: "twitter"
     },
     {
       remoteID: 2,
-      tags: ["weather", "storm"],
+      tags: [{name:"weather"}, {name: "storm"}],
       source: "twitter"
     }];
 
@@ -187,14 +186,14 @@ describe('Item', function(){
         // source that are already in the db
         var newItemData = [{
           remoteID: 1,
-          tags: ["health", "injury", "accident"],
+          tags: [{name:"health"}, {name:"injury"}, {name:"accident"}],
           source: "twitter"
         },
         // this item should be created, because there is no remoteID 2 for
         // sourceType facebook.
         {
           remoteID: 2,
-          tags: ["weather", "storm"],
+          tags: [{name:"weather"}, {name:"storm"}],
           source: "facebook"
         }];
 

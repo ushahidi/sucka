@@ -43,7 +43,7 @@ KenyaTraffic.prototype.transform = function(inputData) {
         code: 'en',
       },
       source: "kenya-traffic-incidents-2011",
-      tags: ["death", "accident", "road", "injury"]
+      tags: [{name:"death"}, {name:"accident"}, {name:"road"}, {name:"injury"}]
     }
   });
 
