@@ -30,9 +30,9 @@ describe('kenya traffic sucka', function(){
     // a unit test, where we can revel in questionable coding practices. 
     var kt = new KenyaTraffic();
 
-    csv(__dirname + "/data/kenya-traffic-incidents-2011.csv", {headers:true})
-    .on("data", function(data){
-        var data = kt.transform([data]);
+    csv.fromPath(__dirname + "/data/kenya-traffic-incidents-2011.csv", {headers:true})
+    .on("record", function(record){
+        var data = kt.transform([record]);
         ktModel = new store.Item(data[0]);
         ktModel.save(function(err, item) {
           assert.isNull(err);
@@ -40,8 +40,7 @@ describe('kenya traffic sucka', function(){
           assert(item.content.length > 0);
           assert(item.source === "kenya-traffic-incidents-2011");
         });
-    })
-    .parse();
+    });
 
   });
     

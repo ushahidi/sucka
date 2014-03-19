@@ -34,7 +34,8 @@
     "simple-redis-queue": "~0.9.3",
     "fbgraph": "~0.2.9",
     "fb": "~0.6.2",
-    "fast-csv": "0.0.3"
+    "fast-csv": "0.2.2",
+    "unzip": "~0.1.9"
   },
   "devDependencies": {
     "mocha": "1.13.0",

@@ -12,12 +12,11 @@ KenyaTraffic.prototype = Object.create(Sucka.prototype);
 KenyaTraffic.prototype.suck = function() {
   var that = this;
 
-  csv(__dirname + "/data/kenya-traffic-incidents-2011.csv", {headers:true})
-  .on("data", function(data){
-      that.transform([data]);
+  csv.fromPath(__dirname + "/data/kenya-traffic-incidents-2011.csv", {headers:true})
+  .on("record", function(record){
+      that.transform([record]);
       //console.log(data);
-  })
-  .parse();
+  });
 };
 
 
