@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
-  , validate = require('mongoose-validator').validate;
+  , validate = require('mongoose-validator').validate
+  , schemaUtils = require("./utils");
 
 /**
  * A Source document represents a source of data.
@@ -10,6 +11,10 @@ var sourceSchema = mongoose.Schema({
       default: Date.now
     },
     updatedAt: Date,
+    internalID: {
+      type: String,
+      index: true
+    },
     /**
      * `sourceType` lets the application know how the incoming data will be 
      * retrieved and structured. Often times there will only be one source 
@@ -75,6 +80,11 @@ var sourceSchema = mongoose.Schema({
     failData: mongoose.Schema.Types.Mixed
     //createdBy: User
 });
+
+// Copying common methods, because inheriting from a base schema that inherited 
+// from `mongoose.Schema` was annoying.
+schemaUtils.setCommonFuncs("statics", sourceSchema);
+schemaUtils.setCommonFuncs("methods", sourceSchema);
 
 sourceSchema.methods.repeatMilliseconds = function() {
   var msDict = {

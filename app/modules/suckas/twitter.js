@@ -11,6 +11,18 @@ var Sucka = require("./sucka")
 var TwitterSucka = function() {};
 TwitterSucka.prototype = Object.create(Sucka.prototype);
 
+TwitterSucka.definition = {
+  internalID: '5f072dc8-4423-4652-86c4-4c59d5ea04e8',
+  sourceType: "twitter",
+  frequency: "repeats",
+  repeatsEvery: "minute",
+  startDate: moment('2014-03-20', 'YYYY-MM-DD'),
+  endDate: moment('2014-03-21', 'YYYY-MM-DD'),
+  filters: {
+    searchString: 'traffic OR accident geocode:-1.292066,36.821946,15mi'
+  }
+};
+
 /**
  * Connect to the Twitter's streaming API and track using the search terms
  * provided by `this.source`.

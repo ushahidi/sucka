@@ -68,7 +68,7 @@ describe('Item', function(){
     }];
 
     // Note that slick promise interface. Sweeeeeet
-    var promise = Item.saveList(itemData);
+    var promise = Item.saveList(itemData, ["source", "remoteID"]);
 
     promise.then(function(items) {
       assert(items[0].remoteID === itemData[0].remoteID.toString());
@@ -98,7 +98,7 @@ describe('Item', function(){
     }];
 
     // Note that slick promise interface. Sweeeeeet
-    var promise = Item.saveList(itemData);
+    var promise = Item.saveList(itemData, ["source", "remoteID"]);
 
     promise.then(function(items) {
       // This will throw an error, which is the point.
@@ -176,7 +176,7 @@ describe('Item', function(){
 
 
     // Note that slick promise interface. Sweeeeeet
-    var promise = Item.saveList(itemData);
+    var promise = Item.saveList(itemData, ["source", "remoteID"]);
 
     promise.then(function(items) {
       var allItems = Item.find(function(err, allItems) {
@@ -214,6 +214,18 @@ describe('Item', function(){
     });
 
 
+  });
+
+  it('should not fail when save coords in a list', function(done) {
+    var data = require("./data/twitter-formatted-2");
+
+    Item.saveList(data, ["remoteID", "source"]).then(function(newItems) {
+      assert(newItems.length > 0);
+      done();
+    }, function(err) {
+      assert.isNull(err);
+      done();
+    });
   });
 
 })

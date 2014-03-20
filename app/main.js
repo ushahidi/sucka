@@ -47,24 +47,66 @@ App.prototype.start = function() {
   this.setupBus();
 
   this.db = this.setupDB();
+  
+  /**
+   * Once the database is ready we'll setup sources according to their `definition`
+   * property, which is maintained in the `source` document's corresponding `sucka`
+   * module. Any unrecognized sources are added.
+   */
   this.db.once('open', function() {
     logger.info("sucka db ready");
-    store.Source.findActive().then(function(sources) {
-      if(_(sources).isEmpty()) {
-        logger.warn("no sources found");
-        return false;
-      }
+    that.setupSources(suckas)
+      .then(that.getActiveSources,
+        function(err) {
+          logger.error('failed to get sources ' + err);
+        })
+       /**
+        * Now that we've added any new suckas/sources that have been committed since
+        * the last process restart, we're ready to suck those sources.
+        */
+      .then(function(sources) {
+          if(_(sources).isEmpty()) {
+            logger.warn("no sources found");
+            return false;
+          }
 
-      logger.info("sucka initiating sucking for " + _(sources).pluck("id").toString());
-      that.initiateSucking(sources);
-    }, function(err) {
-      logger.error("failed to get sources " + err);
-    });
+          logger.info("sucka initiating sucking for " + _(sources).pluck("id").toString());
+          that.initiateSucking(sources);
+        },
+        function(err) {
+          logger.error("failed to suck sources " + err);
+        })
   });
 
   // Check for delayed jobs that need to be promoted. This runs every 5 seconds
   this.suckaQueue.promote();
 
+};
+
+/**
+ * Each `sucka` should come with a `definition` property that tells the system 
+ * how this `source` behaves (how often it should be retrieved, any filters 
+ * required when querying the source, etc). Because these will be added to the 
+ * codebase in between process restarts, we need to check at startup for any 
+ * new sources that haven't yet been added to the database (and add them).
+ */
+App.prototype.setupSources = function(suckaModules) {
+  logger.info("App.setupSources called");
+
+  var suckaSources = [];
+
+  _(_(suckaModules).keys()).each(function(key) {
+    var Sucka = suckaModules[key];
+    if(!_(Sucka.definition).isEmpty() && !_(Sucka.definition.internalID).isEmpty()) {
+      suckaSources.push(Sucka.definition);
+    }
+  });
+
+  return store.Source.saveList(suckaSources, ["internalID"]);
+};
+
+App.prototype.getActiveSources = function() {
+  return store.Source.findActive();
 };
 
 /**
