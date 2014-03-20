@@ -63,6 +63,32 @@ Open up your new file. We're going to add some code. If you've done classical pr
 
 First we tell our new module that we'll be referencing some other modules. We do that with the `require` statements at the top. The most important one right now is `Sucka`. Then we make an object and tell it to inherit all the capabilities of the base `Sucka` module. Sweet. Now let's suck some data.
 
+Now let's tell the system how often we want this sucka to, erm, suck.
+
+    KenyaTraffic.definition = {
+      internalID: '5f072dc8-4423-4652-86c4-4c59d5ea04e8',
+      sourceType: "kenya-traffic-2011",
+      frequency: "repeats",
+      repeatsEvery: "hour",
+      startDate: moment('2014-03-20', 'YYYY-MM-DD'),
+      endDate: moment('2014-03-21', 'YYYY-MM-DD')
+    };
+
+There are a couple things to note here. First is the `internalID`. This is a "Universally Unique ID" (UUID). You can generate your own [at this handy website](http://uuidgenerator.net/), or open up the terminal and do this your favorite programming language. For instance, in Python:
+
+    import uuid
+    uuid.uuid4()
+
+And presto.
+
+The `sourceType` is a little tricky. If you're working with a static dataset (like a csv of traffic data from a specific year in Kenya, just for example), this will probably be very specific. If you're working with a more generic data source, like Twitter, this will be one of many `sucka` modules for that source. 
+
+Your `frequency` is either "repeats" or "once" - that's it. Repeating sources can repeat as often as you like - "minute", "day", "hour", "week", etc.
+
+I'm using the excellent [moment.js](http://momentjs.com/) library to set my `startDate` and `endDate`, but any 'ol `Date` object will do.
+
+If you're curious, whenever the `sucka` app process restarts, it checks for new `sucka` modules, and any new ones are added to the database before being fed into the scheduling engine for execution.
+
 #### Step 3: Suck some data
 
 Every `sucka` must have a `suck` method. This defines the procedure for getting the data. In this case that just means pulling the data out of a file in the `data` directory, which is made wonderfully simple thanks to [fast-csv](https://github.com/C2FO/fast-csv). 
