@@ -30,10 +30,9 @@ App.prototype.start = function() {
   logger.info("sucka starting");
   var that = this;
 
-  //redistogo:34db73a463158e22aa2099e1050e8acd@beardfish.redistogo.com:9437
   var makeRedisClient = function() {
-    var redisClient = redis.createClient("9437", "beardfish.redistogo.com");
-    redisClient.auth("34db73a463158e22aa2099e1050e8acd");
+    var redisClient = redis.createClient(config.queue.port, config.queue.host);
+    redisClient.auth(config.queue.password);
     return redisClient;
   }
 
