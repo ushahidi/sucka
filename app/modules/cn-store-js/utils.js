@@ -1,6 +1,7 @@
 var Promise = require('promise')
   , _ = require('underscore')
-  , _s = require('underscore.string');
+  , _s = require('underscore.string')
+  , logger = require('winston');
 
 
 /**
@@ -37,21 +38,31 @@ statics.upsert = function(data, conditions) {
      * the `reduce` step.
      */
     var upsertConditions = {};
+    
     _.each(conditions, function(prop) {
       var objProp = _.reduce(prop.split("."), function(memo, prop) { return memo[prop] }, data);
       upsertConditions[prop] = objProp;
     }); 
+
+    // Really weird shit will happen if you don't supply any conditions. 
+    if(_(upsertConditions).isEmpty()) return reject(new Error("utils.upsert no conditions supplied"))
+
     that.findOne(upsertConditions,
       // callback
       function(err, obj) {
-        if(err) return reject(err);
+        if(err) {
+          logger.error("utils.upsert findOne failed " + err);
+          return reject(err);
+        }
         
         // we did not find an item matching the query conditions, so make one
         if(!obj) {
+          logger.info("utils.upsert creating new record");
           obj = new that(data);
         }
         // extend the item we found with new data
         else {
+          logger.info("utils.upsert updating existing record");
           _(obj).extend(data);
         }
 
@@ -81,6 +92,7 @@ statics.saveList = function(data, upsertProperties) {
     return that.upsert(obj, upsertProperties);
   });
 
+  logger.info("saveList have funcs");
   return Promise.all(funcs);
 };
 

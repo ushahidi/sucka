@@ -3,7 +3,8 @@ var config = require('config')
   , store = require('../app/modules/cn-store-js')
   , moment = require('moment');
 
-mongoose.connect("mongodb://cnstaging:yLg14C2XZ86Pn3x@troup.mongohq.com:10021/cnstaging"); 
+//mongoose.connect("mongodb://cnstaging:yLg14C2XZ86Pn3x@troup.mongohq.com:10021/cnstaging"); 
+mongoose.connect("mongodb://localhost/crisisnet");
 var db = mongoose.connection;
 
 db.once('open', function() {

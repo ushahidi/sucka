@@ -71,6 +71,17 @@ Gdelt.prototype.recordToObject = function(record) {
   return data;
 };
 
+Gdelt.prototype.determineTags = function(recordObject) {
+  var tags = [];
+
+  // ethnicities
+  // known groups
+  // type
+  // category tags based on EventCode
+
+  return tags;
+};
+
 Gdelt.prototype.shouldTransform = function(recordObject) {
   if(this.logger > 5) return false;
 
@@ -101,7 +112,6 @@ Gdelt.prototype.transform = function(record) {
   recordObject = that.recordToObject(record);
   if(!that.shouldTransform(recordObject)) return false;
 
-  console.log(recordObject);
   var outputData = {
     remoteID: recordObject.GLOBALEVENTID,
     publishedAt: new Date(moment(recordObject.SQLDATE, 'YYYYMMDD')),
@@ -140,13 +150,14 @@ Gdelt.prototype.transform = function(record) {
     tags: []
   };
 
-  if(!_(Actor2Geo_Lat).isEmpty() || !_(Actor1Geo_Lat).isEmpty()) {
+  // Add coordinates if available
+  if(!_(recordObject.Actor2Geo_Lat).isEmpty() || !_(recordObject.Actor1Geo_Lat).isEmpty()) {
     var point = (function() {
-      if(!_(Actor1Geo_Lat).isEmpty()) {
-        return [Actor1Geo_Long, Actor1Geo_Lat];
+      if(!_(recordObject.Actor1Geo_Lat).isEmpty()) {
+        return [recordObject.Actor1Geo_Long, recordObject.Actor1Geo_Lat];
       }
       else {
-        return [Actor2Geo_Long, Actor2Geo_Lat];
+        return [recordObject.Actor2Geo_Long, recordObject.Actor2Geo_Lat];
       }
     })();
 
@@ -156,7 +167,16 @@ Gdelt.prototype.transform = function(record) {
     };
   }
 
+  // Add fromURL if available
+  if(!_(recordObject.SOURCEURL).isEmpty()) {
+    outputData.fromURL = recordObject.SOURCEURL;
+  }
+
+  // No need to summarize this content, it's already short 
   outputData.summary = outputData.content; 
+
+  // Set the initial tags
+  outputData.tags = that.determineTags();
 
   //console.log(outputData);
 

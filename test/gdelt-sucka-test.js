@@ -17,11 +17,13 @@ describe('gdelt sucka', function(){
     mongoose.connect(config.dbURI, done);
   });
 
+  /*
   it('should get some data', function(done) {
     this.timeout(5000);
     var gd = new Gdelt();
     gd.suck();
   });
+  */
 
   it('should setup the event code data', function(done) {
     //this.timeout(5000);

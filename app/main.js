@@ -30,7 +30,16 @@ App.prototype.start = function() {
   logger.info("sucka starting");
   var that = this;
 
-  this.transformQueue = new RedisQueue(redis.createClient());
+  //redistogo:34db73a463158e22aa2099e1050e8acd@beardfish.redistogo.com:9437
+  var makeRedisClient = function() {
+    var redisClient = redis.createClient("9437", "beardfish.redistogo.com");
+    redisClient.auth("34db73a463158e22aa2099e1050e8acd");
+    return redisClient;
+  }
+
+  kue.redis.createClient = makeRedisClient;
+
+  this.transformQueue = new RedisQueue(makeRedisClient());
   this.suckaQueue = kue.createQueue();
 
   this.processErrorHandling();
@@ -42,8 +51,15 @@ App.prototype.start = function() {
   this.db.once('open', function() {
     logger.info("sucka db ready");
     store.Source.findActive().then(function(sources) {
+      if(_(sources).isEmpty()) {
+        logger.warn("no sources found");
+        return false;
+      }
+
       logger.info("sucka initiating sucking for " + _(sources).pluck("id").toString());
       that.initiateSucking(sources);
+    }, function(err) {
+      logger.error("failed to get sources " + err);
     });
   });
 
@@ -119,17 +135,22 @@ App.prototype.setupBus = function() {
      * @param {function} done - callback for queue when task is complete
      */
     function(data, source, done) { 
-      logger.info("sucka.App.setupBus storing data " + _(data).pluck("remoteID").toString());
+      logger.info("sucka.App.setupBus trying to store data " + _(data).pluck("remoteID").toString());
 
-      store.Item.saveList(data)
+      // `saveList` does an "upsert" on each item in the `data` array. The 
+      // second argument is a list of the properties we will use to check if 
+      // the item already exists in the database.
+      store.Item.saveList(data, ["remoteID", "source"])
       .then(
         function(items) {
+          logger.info("sucka.App.setupBus store data success!");
           // No matter what let queue know that task has been completed
           done();
 
           that.postSuck(source.id, items);
         },
         function(err) {
+          logger.error("sucka.App.setupBus error storing data");
           /**
            * If any of the models were not saved properly, then we have a 
            * problem with this source that needs to be addressed. Pass as

@@ -162,6 +162,10 @@ var itemSchema = mongoose.Schema({
       required: true,
       default: 'unknown',
       validate: validate('isIn', ['odbl', 'commercial', 'unknown'])
+    },
+    fromURL: {
+      type: String,
+      validate: validate('isUrl')
     }
 });
 
