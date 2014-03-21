@@ -14,6 +14,15 @@ var Sucka = require("./sucka")
 var Gdelt = function() {};
 Gdelt.prototype = Object.create(Sucka.prototype);
 
+Gdelt.definition = {
+  internalID: '6589847b-57f0-425e-bb6b-c0ce4fd1bafa',
+  sourceType: "gdelt",
+  frequency: "repeats",
+  repeatsEvery: "day",
+  startDate: moment('2014-03-20', 'YYYY-MM-DD'),
+  endDate: moment('2014-03-21', 'YYYY-MM-DD')
+};
+
 Gdelt.prototype.suck = function() {
   var that = this;
 
