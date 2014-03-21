@@ -26,11 +26,13 @@ Gdelt.definition = {
 Gdelt.prototype.suck = function() {
   var that = this;
 
+  // Where we're putting the file we retrieve from Gdelt website
   var zipFilePath = __dirname + '/data/gdelt/latest-daily.zip';
   var today = moment('2014-03-18', 'YYYY-MM-DD').format('YYYYMMDD');
   var file = fs.createWriteStream(zipFilePath);
   var url = 'http://data.gdeltproject.org/events/'+ today + '.export.CSV.zip';
 
+  // Get the file and pipe it into our writeStream
   request(url, function(err, resp, body) {
     if(err) {
       that.handleError(err);
@@ -38,6 +40,8 @@ Gdelt.prototype.suck = function() {
     logger.info('Gdelt.suck retrieved ' + url + ' with code ' + resp.statusCode);
   }).pipe(file);
 
+  // Once the file has finished writing we'll read it, unzip it, and parse the 
+  // csv file in the extracted directory
   file.on('finish', function() {
     logger.info("Gdelt suck finished writing zip");
     file.close();
@@ -46,10 +50,15 @@ Gdelt.prototype.suck = function() {
     .pipe(unzip.Parse())
     .on('entry', function (entry) {
       var fileName = entry.path;
+      
+      // We only want to deal with the CSV - it should be the only thing in there
       if (fileName === today + ".export.CSV") {
         var newFilePath = __dirname + '/data/gdelt/gdelt-latest.csv';
         var newFile = fs.createWriteStream(newFilePath);
         entry.pipe(newFile);
+        
+        // Now that we've finished writing the extracted contents to another 
+        // new file, let's read that and send each line to our transform method
         newFile.on('finish', function() {
           logger.info("Gdelt.suck zip file extracted");
           var stream = fs.createReadStream(newFilePath);
@@ -66,6 +75,11 @@ Gdelt.prototype.suck = function() {
   });
 };
 
+/**
+ * GDELT data is like a SQL dump. Many columns in the CSVs are foreign key 
+ * references to other tables. We're storing that additional GDELT information 
+ * in JSON files on the local filesystem.
+ */
 Gdelt.prototype.setupData = function() {
   var path = './data/gdelt/';
   
@@ -81,6 +95,9 @@ Gdelt.prototype.setupData = function() {
     this.eventTypes = require(path + 'event-types.json');
   }
 
+  // Note the `.js` extension. This is due to a strange naming convention
+  // GDELT uses for event description codes. The initial zero in many of the 
+  // codes is removed by default when the object is interpreted as JSON.
   if(!this.eventDescriptions) {
     this.eventDescriptions = require(path + 'event-descriptions.js');
   }
@@ -90,6 +107,11 @@ Gdelt.prototype.setupData = function() {
   }
 };
 
+
+/**
+ * Just like how it sounds. Takes a row from the CSV and assigns each value 
+ * to its corresponding header in an object. Just for convenience/readability. 
+ */
 Gdelt.prototype.recordToObject = function(record) {
   var data = {};
 
@@ -100,6 +122,12 @@ Gdelt.prototype.recordToObject = function(record) {
   return data;
 };
 
+
+/**
+ * GDELT does quite a bit of categorization already, noting any relgions, 
+ * known groups, ethnicities, etc mentioned in an event. We layer our own 
+ * more generic categorization on top of that based on the event description. 
+ */
 Gdelt.prototype.determineTags = function(recordObject) {
   var that = this;
 
@@ -178,6 +206,12 @@ Gdelt.prototype.determineTags = function(recordObject) {
   return _(_.uniq(tags)).map(function(tag) { return {name: tag}});
 };
 
+
+/**
+ * Each daily CSV contains information indexed on that day, not events that 
+ * (necessarily) occurred on that day. We're only interested in recent information 
+ * so we're removing old data, and records that are too generic. 
+ */
 Gdelt.prototype.shouldTransform = function(recordObject) {
 
   if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment('20140318', 'YYYYMMDD'), 'day')) return false;
@@ -193,11 +227,17 @@ Gdelt.prototype.shouldTransform = function(recordObject) {
   return true;
 };
 
+
 Gdelt.prototype.transform = function(record) {
   var that = this;
   that.setupData();
 
   recordObject = that.recordToObject(record);
+
+  // Warning! Bad practice. This method returns either boolean or an object.
+  // However I'm letting it slide because the return value is only used for 
+  // testing. Normally this method resolves by calling the object's 
+  // `allFinished` method, which passes data back to the main process. 
   if(!that.shouldTransform(recordObject)) return false;
 
   var outputData = {
