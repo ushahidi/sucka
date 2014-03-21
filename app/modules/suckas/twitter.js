@@ -3,6 +3,7 @@ var Sucka = require("./sucka")
   , config = require("config").twitter
   , logger = require("winston")
   , moment = require("moment")
+  , _ = require("underscore");
 
 /**
  * All retrieval/transformation objects are prototyped from the Sucka. This 
@@ -16,8 +17,8 @@ TwitterSucka.definition = {
   sourceType: "twitter",
   frequency: "repeats",
   repeatsEvery: "minute",
-  startDate: moment('2014-03-20', 'YYYY-MM-DD'),
-  endDate: moment('2014-03-21', 'YYYY-MM-DD'),
+  startDate: moment('2014-03-19', 'YYYY-MM-DD'),
+  endDate: moment('2014-03-22', 'YYYY-MM-DD'),
   filters: {
     searchString: 'traffic OR accident geocode:-1.292066,36.821946,15mi'
   }
@@ -43,8 +44,10 @@ TwitterSucka.prototype.suck = function() {
     that.transform([tweet]);
   })
   */
-
-  var lastRetrieved = that.source.lastRetrievedRemoteID;
+  var lastRetrieved;
+  if(that.source.lastRetrieved) {
+    lastRetrieved = that.source.lastRetrieved.remoteID;
+  }
   var q = that.source.filters.searchString;
 
   if(lastRetrieved) {
@@ -67,14 +70,15 @@ TwitterSucka.prototype.suck = function() {
  * Transform a list of tweets to items matching the CrisisNET schema.
  */
 TwitterSucka.prototype.transform = function(inputData) {
+  var that = this;
+
   var outputData = inputData.map(function(tweet) {
-    return {
+    var returnData = {
       remoteID: tweet.id_str,
       publishedAt: new Date(moment(tweet.created_at)),
       lifespan: "temporary",
       content: tweet.text,
       geo: {
-        coords: tweet.coordinates,
         locationIdentifiers: {
           authorTimeZone: tweet.user.time_zone,
           authorLocationName: tweet.user.location
@@ -84,11 +88,25 @@ TwitterSucka.prototype.transform = function(inputData) {
         code: tweet.lang,
       },
       source: "twitter"
+    };
+
+    if(tweet.coordinates) {
+      returnData.geo.coords = tweet.coordinates;
     }
+
+    return returnData;
+
   });
 
-  //that.handleError(error);
-  this.allFinished(outputData);
+  _(outputData).each(function(item) {
+    that.returnData(item);
+  });
+
+  var lastRetrievedDoc = _(_(outputData).sortBy(function(doc) {
+    return (new Date(doc.publishedAt)).getTime();
+  })).last();
+
+  that.allFinished(lastRetrievedDoc);
 
   return outputData;
 };

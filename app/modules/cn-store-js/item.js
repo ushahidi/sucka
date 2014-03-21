@@ -6,7 +6,8 @@ var mongoose = require('mongoose')
   , _s = require('underscore.string')
   , allowedTags = require('./allowed-tags')
   , languageCodes = require('./language-codes')
-  , schemaUtils = require("./utils");
+  , schemaUtils = require("./utils")
+  , logger = require("winston");
 
 
 /**
@@ -205,12 +206,13 @@ itemSchema.pre("save",function(next, done) {
 itemSchema.pre('save', function (next) {
   var coords = this.geo.coords;
 
-  if(this.geo.coords === null) {
-    this.geo.coords = undefined;
-  }
-
-  if (this.isNew && Array.isArray(coords) && 0 === coords.length) {
-    this.geo.coords = undefined;
+  
+  if(!coords || !coords.coordinates) {
+    this.geo.coords = {
+      type: 'Point',
+      coordinates: [0,0]
+    };
+    return next();
   }
 
   if (this.isNew && Array.isArray(coords) 

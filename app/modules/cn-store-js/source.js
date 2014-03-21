@@ -66,11 +66,10 @@ var sourceSchema = mongoose.Schema({
     },
     lastRun: Date,
     /**
-     * Some services allow us to search "since" an id, so we store the id of 
-     * most-recently retrieved record along with the date/time this sucka was 
-     * last run. 
+     * Some services allow us to search "since" an id, or since a particular 
+     * date, etc etc so it's useful to know what we sucked last.
      */
-    lastRetrievedRemoteID: String,
+    lastRetrieved: mongoose.Schema.Types.Mixed,
     filters: mongoose.Schema.Types.Mixed,
     /**
      * External data is a gnarly, dangerous beast. It will inevitably break

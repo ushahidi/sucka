@@ -7,6 +7,7 @@ var config = require('config')
   , mongoose = require('mongoose')
   , clearDB  = require('mocha-mongoose')(config.dbURI)
   , store = require('../app/modules/cn-store-js')
+  , moment = require("moment")
   , Gdelt = require('../app/modules/suckas/gdelt')
   , csv = require("fast-csv")
   , fs = require('fs');
@@ -103,19 +104,44 @@ describe('gdelt sucka', function(){
   });
   
 
-  it('should transform data to the correct format', function(){
-    this.timeout(10000);
+  it('should extract the csv and parse results', function(done) {
+    this.timeout(30000);
     var gd = new Gdelt();
     gd.setupData();
+    var zipFilePath = __dirname + "/data/latest-daily.zip";
+    var today = moment('2014-03-20', 'YYYY-MM-DD').format('YYYYMMDD');
+    var newFilePath = __dirname + '/data/gdelt-tmp.csv';
+    var relevantOutputPath = __dirname + '/data/gdelt-relevant.csv';
 
-    var stream = fs.createReadStream(__dirname + "/data/gdelt-sample.csv");
-    csv.fromStream(stream, {delimiter: "\t"})
-    .on("record", function(record){
-        var data = gd.transform(record);
-        
-        if(data) {
-          var gdModel = new store.Item(data[0]);
+    gd.returnData = function(data) {
+      assert.isDefined(data.remoteID);
+    };
 
+    gd.allFinished = function(lastTransformed) {
+      console.log("----------- IN ALL FINISHED ------------");
+      assert.isDefined(lastTransformed.remoteID);
+      done();
+    };
+
+    gd.processData(zipFilePath, newFilePath, relevantOutputPath, today);
+  });
+  
+  it('should transform data to the correct format', function(done){
+    this.timeout(20000);
+    var gd = new Gdelt();
+    gd.setupData();
+    var csvFilePath = __dirname + "/data/gdelt-sample.csv";
+    var relevantOutputPath = __dirname + '/data/gdelt-sample-relevant.csv';
+
+    gd.findRelevantRecords(csvFilePath, relevantOutputPath, '2014-03-19')
+      .then(function(relevantFilePath) {
+        var relevantStream = fs.createReadStream(relevantFilePath);
+        var lastTransformed;
+
+        csv.fromStream(relevantStream, {delimiter: "\t"})
+        .on("record", function(record){
+          lastTransformed = gd.transform(record);
+          gdModel = new store.Item(lastTransformed);
           gdModel.save(function(err, item) {
             if(err) {
               console.log(err);
@@ -127,9 +153,11 @@ describe('gdelt sucka', function(){
             assert(item.tags.length > 0);
             assert(item.source === "gdelt");
           });
-        }
-    });
+        })
+        .on("end", function(){
+          done();
+        });
+      });
   });
-  
 
 });

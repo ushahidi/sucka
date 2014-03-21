@@ -50,12 +50,18 @@ Sucka.prototype.transform = function(inputData) {
 /**
  * Called when sucka instance has finished transforming it sucks.
  *
- * @param {Array} transformedData - List of transformed objects to be indexed
+ * @param {String} lastRetrieved - last retrieved doc
  */ 
-Sucka.prototype.allFinished = function(transformedData) {
+Sucka.prototype.allFinished = function(lastRetrieved) {
   if(!this.bus) return;
 
-  this.bus.emit("data", transformedData, this.source, this.done);
+  this.bus.emit("sucked", this.source, lastRetrieved, this.done);
+};
+
+Sucka.prototype.returnData = function(transformedObject) {
+  if(!this.bus) return;
+
+  this.bus.emit("data", transformedObject, this.source);
 };
 
 

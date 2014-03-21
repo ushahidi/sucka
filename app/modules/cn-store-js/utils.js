@@ -63,7 +63,11 @@ statics.upsert = function(data, conditions) {
         // extend the item we found with new data
         else {
           logger.info("utils.upsert updating existing record");
-          _(obj).extend(data);
+          //console.log("-------------------------");
+          //console.log(JSON.stringify(obj));
+          //console.log(data);
+          obj = _(obj).extend(data);
+          //console.log(obj);
         }
 
         // return a promise

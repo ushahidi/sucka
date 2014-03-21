@@ -75,7 +75,7 @@ App.prototype.start = function() {
         },
         function(err) {
           logger.error("failed to suck sources " + err);
-        })
+        });
   });
 
   // Check for delayed jobs that need to be promoted. This runs every 5 seconds
@@ -166,29 +166,43 @@ App.prototype.setupBus = function() {
   var that = this;
   this.bus = new EventEmitter();
 
+  // two separate events
+  // on data, save and send to processing pipeline
+  // on sucked, do postSuck - the sucked should include last-sucked item
+
+  /**
+   * Let queue know the task is complete and invoke whatever post-processing 
+   * we need to do.  
+   * 
+   * @param {function} done - callback for queue when task is complete
+   */
+  this.bus.on("sucked", function(source, lastRetrieved, done) {
+    // No matter what let queue know that task has been completed
+    done();
+
+    that.postSuck(source.id, lastRetrieved);
+  });
+
   this.bus.on("data", 
     /**
-     * Index the transformed data, let queue know the task is complete and 
-     * invoke whatever post-processing we need to do. 
+     * Index the transformed data
      * 
-     * @param {Array} data - List of transformed items
+     * @param {Array} data - Transformed item
      * @param {Object} source - Source model instance
-     * @param {function} done - callback for queue when task is complete
      */
-    function(data, source, done) { 
-      logger.info("sucka.App.setupBus trying to store data " + _(data).pluck("remoteID").toString());
+    function(data, source) { 
+      logger.info("sucka.App.setupBus trying to store data");
 
       // `saveList` does an "upsert" on each item in the `data` array. The 
       // second argument is a list of the properties we will use to check if 
       // the item already exists in the database.
-      store.Item.saveList(data, ["remoteID", "source"])
+      store.Item.upsert(data, ["remoteID", "source"])
       .then(
-        function(items) {
-          logger.info("sucka.App.setupBus store data success!");
-          // No matter what let queue know that task has been completed
-          done();
-
-          that.postSuck(source.id, items);
+        function(item) {
+          logger.info("sucka.App.setupBus store data success id " + item.id);
+          // Pass to the transformation pipeline
+          logger.info("sucka.App.postSuck transformQueue publish " + JSON.stringify({id:item.id}));
+          that.transformQueue.push("transform", JSON.stringify({id:item.id}));
         },
         function(err) {
           logger.error("sucka.App.setupBus error storing data");
@@ -200,9 +214,6 @@ App.prototype.setupBus = function() {
            * that caused the problem. 
            */
            that.handleBrokenSource(source, data, err);
-
-          // No matter what et queue know that task has been completed
-          done();
         }
       );
     }
@@ -247,11 +258,15 @@ App.prototype.getSuckaForSource = function(source) {
  * @param {Object} error
  */
 App.prototype.handleBrokenSource = function(source, data, error) {
-  logger.error("sucka.App.handleBrokenSource SOURCE ERROR " + source.id + " | " + error);
+  logger.error("sucka.App.handleBrokenSource SOURCE ERROR " + source.id + " with type " + source.sourceType + " | " + error);
 
-  source.status = 'failing';
-  source.failData = data;
-  source.save();
+  if(_(source.id).isUndefined()) return false;
+
+  store.Source.findById(source.id, function(err, source) {
+    source.status = 'failing';
+    source.failData = data;
+    source.save();
+  });
 };
 
 
@@ -270,8 +285,18 @@ App.prototype.initiateSucking = function(sources) {
       // Perform a suck whenever this source has an active task in the queue. 
       // We use the source.id (string) as the task `type`/event name. 
       that.suckaQueue.process(source.id, function(task, done) {
-        logger.info("sucka.App processing task " + task);
-        that.suckIt(task.data.source, done);
+        store.Source.findById(source.id, function(err, source) {
+          if(err) {
+            return logger.error("sucak.App.initiateSucking failed to find " + source.id);
+          }
+
+          if(source.status === "failing") {
+            return logger.warn("sucak.App.initiateSucking not running source " + source.id + " because it is failing");
+          }
+
+          logger.info("sucka.App processing task " + task);
+          that.suckIt(task.data.source, done);
+        });
       });
     }
 
@@ -347,7 +372,7 @@ App.prototype.suckIt = function(source, done) {
  *
  * @param {Object} source - Source model instance
  */
-App.prototype.postSuck = function(sourceID, docs) {
+App.prototype.postSuck = function(sourceID, lastRetrieved) {
   var that = this;
   logger.info("sucka.App.postSuck for source " + sourceID);
 
@@ -355,15 +380,9 @@ App.prototype.postSuck = function(sourceID, docs) {
     source.lastRun = Date.now();
     source.hasRun = true;
 
-    // Some services allow us to query "since" a specific ID. So we find the 
-    // latest item (relative to its publish time) and set the Source document's
-    // lastRetrievedRemoteID to the remoteID of that item. 
-    var lastRetrievedDoc = _(_(docs).sortBy(function(doc) {
-      return (new Date(doc.publishedAt)).getTime();
-    })).last();
-
-    if(lastRetrievedDoc) {
-      source.lastRetrievedRemoteID = lastRetrievedDoc.remoteID;
+    // Some services allow us to query "since" a specific ID.  
+    if(lastRetrieved) {
+      source.lastRetrieved = lastRetrieved;
     }
 
     // Once the source's properties have been updated, save the changes to the 
@@ -380,17 +399,10 @@ App.prototype.postSuck = function(sourceID, docs) {
           .delay(repeatDelay)
           .save(function(err, state) {
             if(err) return that.handleBrokenSource(source, null, err);
-
-            logger.info("sucka.App.postSuck task created " + source.id);
+            logger.info("============= sucka.App.postSuck task created " + source.id + " ====================== ");
           });
       }
     });
-  });
-
-  // Each of the documents is passed to the transformation pipeline
-  _.each(docs, function(doc) {
-      logger.info("sucka.App.postSuck transformQueue publish " + JSON.stringify({id:doc.id}));
-      that.transformQueue.push("transform", JSON.stringify({id:doc.id}));
   });
 };
 
