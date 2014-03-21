@@ -35,7 +35,8 @@
     "fbgraph": "~0.2.9",
     "fb": "~0.6.2",
     "fast-csv": "0.2.2",
-    "unzip": "~0.1.9"
+    "unzip": "~0.1.9",
+    "validator": "~3.5.0"
   },
   "devDependencies": {
     "mocha": "1.13.0",

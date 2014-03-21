@@ -6,3 +6,5 @@ node_modules
 docs
 deploy_config.py
 *.pyc
+app/modules/suckas/data/gdelt/gdelt-latest.csv
+app/modules/suckas/data/gdelt/latest-daily.zip

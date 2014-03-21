@@ -226,6 +226,7 @@ itemSchema.pre('save', function (next) {
   next();
 });
 
+/*
 itemSchema.pre('save', function (next) {
   if(_(this.tags).isEmpty()) return next();
 
@@ -241,6 +242,7 @@ itemSchema.pre('save', function (next) {
 
   next(new Error('Invalid tag(s): ' + badTags.toString()));  
 });
+*/
 
 var Item = mongoose.model('Item', itemSchema);
 
