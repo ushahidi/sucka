@@ -36,7 +36,7 @@ App.prototype.start = function() {
     return redisClient;
   }
 
-  kue.redis.createClient = makeRedisClient;
+  kue.reds.createClient = kue.redis.createClient = makeRedisClient;
 
   this.transformQueue = new RedisQueue(makeRedisClient());
   this.suckaQueue = kue.createQueue();
