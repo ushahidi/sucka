@@ -18,7 +18,7 @@ TwitterSucka.definition = {
   frequency: "repeats",
   repeatsEvery: "minute",
   startDate: moment('2014-03-19', 'YYYY-MM-DD'),
-  endDate: moment('2014-03-22', 'YYYY-MM-DD'),
+  endDate: moment('2014-03-20', 'YYYY-MM-DD'),
   filters: {
     searchString: 'traffic OR accident geocode:-1.292066,36.821946,15mi'
   }
