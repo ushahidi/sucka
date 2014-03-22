@@ -8,3 +8,4 @@ deploy_config.py
 *.pyc
 app/modules/suckas/data/gdelt/gdelt-latest.csv
 app/modules/suckas/data/gdelt/latest-daily.zip
+app/modules/suckas/data/gdelt/gdelt-latest-relevant.csv
