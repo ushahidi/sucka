@@ -19,7 +19,7 @@
     "nodemon": "0.7.10",
     "underscore": "1.5.1",
     "request": "~2.25.0",
-    "kue": "0.7.4",
+    "kue": "0.7.5",
     "require-all": "0.0.8",
     "promise": "~4.0.0",
     "moment": "~2.5.1",
