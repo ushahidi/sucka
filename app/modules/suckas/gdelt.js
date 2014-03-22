@@ -294,15 +294,7 @@ Gdelt.prototype.determineTags = function(recordObject) {
  */
 Gdelt.prototype.shouldTransform = function(recordObject, dateString) {
   
-  if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment(dateString, 'YYYY-MM-DD').subtract('days',1), 'day')) {
-    // NOTE: need to setupData to transform to object. do that in suck 
-    // 
-    //
-
-    //console.log(recordObject);
-    //console.log("----------- " + dateString + "------------------");
-    return false;
-  }
+  if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment(dateString, 'YYYY-MM-DD').subtract('days',1), 'day')) return false;
   if(_s.startsWith(recordObject.EventRootCode, '0')) return false;
   if(parseInt(recordObject.EventRootCode,10) < 14) return false;
 
