@@ -28,6 +28,7 @@ Gdelt.prototype.suck = function() {
   var that = this;
 
   logger.info("Gdelt.suck starting suck...");
+  that.setupData();
 
   // Where we're putting the file we retrieve from Gdelt website
   var zipFilePath = __dirname + '/data/gdelt/latest-daily.zip';
@@ -124,7 +125,7 @@ Gdelt.prototype.findRelevantRecords = function(csvFilePath, outputPath, dateStri
   var that = this;
 
   if(!dateString) {
-    dateString = moment().format('YYYY-MM-DD');
+    dateString = moment().subtract('days', 1).format('YYYY-MM-DD');
   }
 
   if(!outputPath) {
@@ -189,6 +190,10 @@ Gdelt.prototype.setupData = function() {
  */
 Gdelt.prototype.recordToObject = function(record) {
   var data = {};
+
+  if(_(this.columns).isEmpty()) {
+    logger.warn("Gdelt.recordToObject no columns found");
+  }
 
   _(this.columns).each(function(column, idx) {
     data[column] = record[idx];
@@ -288,14 +293,22 @@ Gdelt.prototype.determineTags = function(recordObject) {
  * so we're removing old data, and records that are too generic. 
  */
 Gdelt.prototype.shouldTransform = function(recordObject, dateString) {
-  if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment(dateString, 'YYYY-MM-DD').subtract('days',1), 'day')) return false;
+  
+  if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment(dateString, 'YYYY-MM-DD').subtract('days',1), 'day')) {
+    // NOTE: need to setupData to transform to object. do that in suck 
+    // 
+    //
+
+    //console.log(recordObject);
+    //console.log("----------- " + dateString + "------------------");
+    return false;
+  }
   if(_s.startsWith(recordObject.EventRootCode, '0')) return false;
   if(parseInt(recordObject.EventRootCode,10) < 14) return false;
 
   var descriptions = _(this.eventDescriptions).filter(function(desc) {
     return desc.code.toString() === recordObject.EventCode.toString();
   });
-
   if(_(descriptions).isEmpty() || _s.include(descriptions[0].label, 'not specified')) return false;
 
   return true;
@@ -304,7 +317,6 @@ Gdelt.prototype.shouldTransform = function(recordObject, dateString) {
 
 Gdelt.prototype.transform = function(record) {
   var that = this;
-  that.setupData();
 
   var recordObject = that.recordToObject(record);
 
