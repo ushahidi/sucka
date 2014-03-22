@@ -32,7 +32,7 @@ Gdelt.prototype.suck = function() {
 
   // Where we're putting the file we retrieve from Gdelt website
   var zipFilePath = __dirname + '/data/gdelt/latest-daily.zip';
-  var today = moment().subtract('days',1).format('YYYYMMDD');
+  var today = moment().subtract('days',2).format('YYYYMMDD');
   var file = fs.createWriteStream(zipFilePath);
   var url = 'http://data.gdeltproject.org/events/'+ today + '.export.CSV.zip';
 
@@ -125,7 +125,7 @@ Gdelt.prototype.findRelevantRecords = function(csvFilePath, outputPath, dateStri
   var that = this;
 
   if(!dateString) {
-    dateString = moment().subtract('days', 1).format('YYYY-MM-DD');
+    dateString = moment().subtract('days', 2).format('YYYY-MM-DD');
   }
 
   if(!outputPath) {
@@ -294,7 +294,7 @@ Gdelt.prototype.determineTags = function(recordObject) {
  */
 Gdelt.prototype.shouldTransform = function(recordObject, dateString) {
   
-  if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment(dateString, 'YYYY-MM-DD').subtract('days',1), 'day')) return false;
+  if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment(dateString, 'YYYY-MM-DD').subtract('days',2), 'day')) return false;
   if(_s.startsWith(recordObject.EventRootCode, '0')) return false;
   if(parseInt(recordObject.EventRootCode,10) < 14) return false;
 
@@ -362,10 +362,7 @@ Gdelt.prototype.transform = function(record) {
       }
     })();
 
-    transformedRecordObject.coords = {
-      coordinates: point,
-      type: 'Point'
-    };
+    transformedRecordObject.geo.coords = point;
   }
 
   // Add fromURL if available

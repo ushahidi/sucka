@@ -91,7 +91,7 @@ TwitterSucka.prototype.transform = function(inputData) {
     };
 
     if(tweet.coordinates) {
-      returnData.geo.coords = tweet.coordinates;
+      returnData.geo.coords = tweet.coordinates.coordinates;
     }
 
     return returnData;

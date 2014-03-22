@@ -227,8 +227,10 @@ describe('Item', function(){
       assert(newItems.length > 0);
       done();
     }, function(err) {
-      assert.isNull(err);
-      done();
+      if(err) {
+        console.log(err);
+        done(err);
+      }
     });
   });
 

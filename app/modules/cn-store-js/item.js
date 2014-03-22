@@ -104,10 +104,7 @@ var itemSchema = mongoose.Schema({
       /**
        * Note that coordinates should always been longitude, latitude
        */
-      coords: {
-        index: '2dsphere',
-        type: [Number]
-      },
+      coords: { type: [Number], index: '2dsphere'},
       /**
        * How accurate are the coordinates? Defined as radius, in meters.
        */
@@ -205,24 +202,13 @@ itemSchema.pre("save",function(next, done) {
 
 itemSchema.pre('save', function (next) {
   var coords = this.geo.coords;
-
   
-  if(!coords || !coords.coordinates) {
-    this.geo.coords = {
-      type: 'Point',
-      coordinates: [0,0]
-    };
-    return next();
+  if(_(coords).isNull()) {
+    this.geo.coords = undefined;
   }
 
-  if (this.isNew && Array.isArray(coords) 
-      && 2 === coords.length
-      && _.every(coords, function(coord) { return _(coord).isNumber(); })) 
-  {
-    this.geo.coords = {
-      type: 'Point',
-      coordinates: coords
-    }
+  if(this.isNew && Array.isArray(coords) && 0 === coords.length) {
+    this.geo.coords = undefined;
   }
 
   next();

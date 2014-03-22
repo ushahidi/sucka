@@ -102,8 +102,7 @@ describe('gdelt sucka', function(){
     });
 
   });
-  
-
+  /*
   it('should extract the csv and parse results', function(done) {
     this.timeout(30000);
     var gd = new Gdelt();
@@ -115,6 +114,8 @@ describe('gdelt sucka', function(){
 
     gd.returnData = function(data) {
       assert.isDefined(data.remoteID);
+      //assert.isDefined(data.geo.coords);
+      //assert(data.geo.coords.length === 2);
     };
 
     gd.allFinished = function(lastTransformed) {
@@ -125,6 +126,7 @@ describe('gdelt sucka', function(){
 
     gd.processData(zipFilePath, newFilePath, relevantOutputPath, today);
   });
+  */
   
   it('should transform data to the correct format', function(done){
     this.timeout(20000);
@@ -141,6 +143,9 @@ describe('gdelt sucka', function(){
         csv.fromStream(relevantStream, {delimiter: "\t"})
         .on("record", function(record){
           lastTransformed = gd.transform(record);
+
+          assert.isDefined(lastTransformed.geo.coords);
+
           gdModel = new store.Item(lastTransformed);
           gdModel.save(function(err, item) {
             if(err) {
@@ -152,6 +157,8 @@ describe('gdelt sucka', function(){
             assert(item.content.length > 0);
             assert(item.tags.length > 0);
             assert(item.source === "gdelt");
+            assert.isDefined(item.geo.coords);
+            assert(_(item.geo.coords).isArray());
           });
         })
         .on("end", function(){
