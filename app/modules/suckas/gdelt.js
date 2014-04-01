@@ -293,7 +293,7 @@ Gdelt.prototype.determineTags = function(recordObject) {
  * so we're removing old data, and records that are too generic. 
  */
 Gdelt.prototype.shouldTransform = function(recordObject, dateString) {
-  logger.info("Gdelt.shouldTransform checking against " + dateString);
+  //logger.info("Gdelt.shouldTransform checking against " + dateString);
   if(!moment(recordObject.SQLDATE, 'YYYYMMDD').isSame(moment(dateString, 'YYYY-MM-DD'), 'day')) return false;
   if(_s.startsWith(recordObject.EventRootCode, '0')) return false;
   if(parseInt(recordObject.EventRootCode,10) < 14) return false;

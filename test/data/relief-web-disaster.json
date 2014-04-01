@@ -1,0 +1,76 @@
+{
+    "version": 0,
+    "status": 200,
+    "time": 12,
+    "data": {
+        "type": "disaster",
+        "id": 12589,
+        "item": {
+            "id": 12589,
+            "url": "http://reliefweb.int/taxonomy/term/12589",
+            "name": "Tropical Cyclone Mahasen - May 2013",
+            "glide": "TC-2013-000060-LKA",
+            "description": "On 14 May, Cyclone Mahasen brought heavy rains and landslides to Sri Lanka, with seven people confirmed dead and 3,881 people displaced due to the resulting heavy rains and landslides. In Bangladesh, following the raising of warning signals to 7 from a possible 10 (expecting severe weather) for Cox’s Bazaar and Chittagong, the Government ordered the evacuation of about one million people from 15 coastal districts. In Myanmar, a total of 35,550 people were relocated from Sittwe, Minbya, Myauk U, Kyauktaw, Rathedaung, Myebon and Pauktaw in Rakhine state. ([OCHA, 15 May 2013](/node/576322))\r\n\r\nCyclone Mahasen made landfall in southern Bangladesh's Patuakhali district on 16 May, affecting almost 1.5 million people and killing 17. More than 26,500 houses were destroyed and almost 124,500 damaged. Large tracts of standing crops were flattened and numerous fish ponds and fish culture washed away. ([IFRC, 6 Jun 2013](/node/581071))\r\n\r\n###Useful Links\r\n- [Joint Typhoon Warning Center](http://jtwccdn.appspot.com/JTWC/)\r\n- [OCHA Regional Office in Asia and the Pacific (ROAP)](http://www.unocha.org/roap/)\r\n- [Myanmar Information Management Unit](http://themimu.info/Cyclone%20Mahasen/index.php)\r\n- [Bangladesh Ministry of Disaster Management and Relief](http://www.cdmp.org.bd/modules.php?name=Situation)\r\n- [Sri Lanka Humanitarian Response](http://srilanka.humanitarianresponse.info)\r\n- [Sri Lanka Disaster Management Center, Ministry of Disaster Management](http://www.dmc.gov.lk/index_english.htm)",
+            "description-html": "<p>On 14 May, Cyclone Mahasen brought heavy rains and landslides to Sri Lanka, with seven people confirmed dead and 3,881 people displaced due to the resulting heavy rains and landslides. In Bangladesh, following the raising of warning signals to 7 from a possible 10 (expecting severe weather) for Cox’s Bazaar and Chittagong, the Government ordered the evacuation of about one million people from 15 coastal districts. In Myanmar, a total of 35,550 people were relocated from Sittwe, Minbya, Myauk U, Kyauktaw, Rathedaung, Myebon and Pauktaw in Rakhine state. (<a href=\"http://reliefweb.int/report/myanmar/un-ocha-flash-update-5-cyclone-mahasen-bangladesh-and-myanmar\">OCHA, 15 May 2013</a>)</p>\n\n<p>Cyclone Mahasen made landfall in southern Bangladesh's Patuakhali district on 16 May, affecting almost 1.5 million people and killing 17. More than 26,500 houses were destroyed and almost 124,500 damaged. Large tracts of standing crops were flattened and numerous fish ponds and fish culture washed away. (<a href=\"http://reliefweb.int/report/bangladesh/bangladesh-tropical-cyclone-mahasen-emergency-appeal-n%C2%B0-mdrbd013-operation-update\">IFRC, 6 Jun 2013</a>)</p>\n\n<h3>Useful Links</h3>\n\n<ul>\n<li><a href=\"http://jtwccdn.appspot.com/JTWC/\">Joint Typhoon Warning Center</a></li>\n<li><a href=\"http://www.unocha.org/roap/\">OCHA Regional Office in Asia and the Pacific (ROAP)</a></li>\n<li><a href=\"http://themimu.info/Cyclone%20Mahasen/index.php\">Myanmar Information Management Unit</a></li>\n<li><a href=\"http://www.cdmp.org.bd/modules.php?name=Situation\">Bangladesh Ministry of Disaster Management and Relief</a></li>\n<li><a href=\"http://srilanka.humanitarianresponse.info\">Sri Lanka Humanitarian Response</a></li>\n<li><a href=\"http://www.dmc.gov.lk/index_english.htm\">Sri Lanka Disaster Management Center, Ministry of Disaster Management</a></li>\n</ul>",
+            "status": "past",
+            "date": {
+                "created": 1368576000000
+            },
+            "primary_country": {
+                "id": 31,
+                "name": "Bangladesh",
+                "iso3": "bgd"
+            },
+            "country": [
+                {
+                    "id": 31,
+                    "name": "Bangladesh",
+                    "iso3": "bgd",
+                    "primary": true
+                },
+                {
+                    "id": 119,
+                    "name": "India",
+                    "iso3": "ind"
+                },
+                {
+                    "id": 165,
+                    "name": "Myanmar",
+                    "iso3": "mmr"
+                },
+                {
+                    "id": 219,
+                    "name": "Sri Lanka",
+                    "iso3": "lka"
+                }
+            ],
+            "primary_type": {
+                "id": 4618,
+                "name": "Tropical Cyclone"
+            },
+            "type": [
+                {
+                    "id": 4618,
+                    "name": "Tropical Cyclone",
+                    "primary": true
+                },
+                {
+                    "id": 4624,
+                    "name": "Flash Flood"
+                },
+                {
+                    "id": 4611,
+                    "name": "Flood"
+                },
+                {
+                    "id": 4728,
+                    "name": "Land Slide"
+                },
+                {
+                    "id": 4814,
+                    "name": "Mud Slide"
+                }
+            ]
+        }
+    }
+}
