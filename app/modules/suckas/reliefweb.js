@@ -37,6 +37,15 @@ ReliefSucka.prototype.suck = function() {
     limit: 100
   };
 
+  if(!_.isUndefined(that.source.lastRetrieved)) {
+    propertiesObject.filter = {
+      field: "date.created",
+      value: {
+        from: (new Date(that.source.lastRetrieved.publishedAt)).getTime()
+      }
+    }
+  }
+
   var collectData = function(offset, memo, total) {
     if(total && offset >= total) {
       that.transform(memo);
