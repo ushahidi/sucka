@@ -53,7 +53,7 @@ Gdelt.prototype.suck = function() {
   // csv file in the extracted directory
   file.on('finish', function() {
     logger.info("Gdelt suck finished writing zip");
-    file.close();
+    file.end();
     file = null;
 
     that.processData(zipFilePath, null, null, today);
@@ -113,7 +113,7 @@ Gdelt.prototype.unzipFile = function(zipFilePath, today, newFilePath) {
         newFile.on('finish', function() {
           logger.info("Gdelt.unzipFile zip file extracted");
           resolve(newFilePath);
-          newFile.close();
+          newFile.end();
           newFile = null;
         });
       }
@@ -148,7 +148,7 @@ Gdelt.prototype.findRelevantRecords = function(csvFilePath, outputPath, dateStri
     })
     .on("end", function(){
       logger.info('Gdelt.findRelevantRecords finished csv parsing');
-      outputStream.close();
+      outputStream.end();
       outputStream = null;
       resolve(outputPath);
     });
