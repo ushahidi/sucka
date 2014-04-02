@@ -1,151 +1,445 @@
 {
     "version": 0,
     "status": 200,
-    "time": 12,
+    "time": 13,
     "data": {
         "type": "disaster",
-        "time": 1,
-        "total": 2613,
-        "count": 20,
+        "time": 0,
+        "total": 2614,
+        "count": 10,
         "list": [
             {
                 "id": "13936",
                 "score": 1,
                 "fields": {
-                    "name": "Indonesia: Floods and Landslides - Dec 2013"
+                    "description": "After a prolonged 2012-2013 wet season that continued into August, Indonesia experienced a brief dry season which transitioned into the 2013-2014 wet season in most parts of the country by the end of October. Floods and landslides killed 35 people in November and affected almost 20,000. ([OCHA, 30 Nov 2013](/node/621795))\r\n\r\n\r\nHeavy rains continued to trigger floods and landslides in December and January. At the end of December, around 18,000 people had to leave their homes after two rivers burst their banks and flooded thousands of houses on Sumatra island ([AFP, 30 Dec 2013](/node/626441)). \r\n\r\nAs of 21 Jan 2014 in Jakarta and outlying areas, approximately 134,662 persons or 38,672 households in 100 urban villages are directly affected by floods, with 12 casualties. At least 62,819 persons are displaced and staying in 253 displacement centers.  The government indicated that it has the capacity to respond to both short and longer term needs created by the floods. It also welcomes technical assistance from the international community in the country, particularly for relief aid logistic management. In the North Sulawesi Province, as of 19 Jan, at least 15,000 persons from two cities and six districts are displaced. 19 casualties are reported. ([OCHA, 22 Jan 2014](/node/631209))",
+                    "name": "Indonesia: Floods and Landslides - Dec 2013",
+                    "primary_type": {
+                        "id": 4611,
+                        "name": "Flood"
+                    },
+                    "date": {
+                        "created": 1385856000000
+                    },
+                    "type": [
+                        {
+                            "id": 4611,
+                            "name": "Flood",
+                            "primary": true
+                        },
+                        {
+                            "id": 4728,
+                            "name": "Land Slide"
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 120,
+                        "name": "Indonesia",
+                        "iso3": "idn"
+                    },
+                    "country": [
+                        {
+                            "id": 120,
+                            "name": "Indonesia",
+                            "primary": true,
+                            "iso3": "idn"
+                        }
+                    ]
                 }
             },
             {
                 "id": "13835",
                 "score": 1,
                 "fields": {
-                    "name": "El Salvador: Chaparrastique Volcano - Dec 2013"
+                    "description": "El Salvador's Chaparrastique volcano erupted on 29 Dec 2013, spewing a column of ash that rose\r\nmore than 5 km above the volcano. Falling ash affected the population living on the volcano's western side, where 2,300 people were relocated to 16 collective centers set up by the authorities while an unknown number moved to homes of relatives living in safe areas. Ash and gas emissions continue, and authorities will consider it a risk situation until sulfur dioxide emissions show a significant and sustained decrease. ([IFRC, 6 Jan 2014](/node/627544))\r\n\r\n###Useful Links\r\n- [Erupción del volcán Chaparrastique - Ministerio de Medio Ambiente y Recursos Naturales (Gobierno de El Salvador)](http://www.marn.gob.sv/)",
+                    "name": "El Salvador: Chaparrastique Volcano - Dec 2013",
+                    "primary_type": {
+                        "id": 4615,
+                        "name": "Volcano"
+                    },
+                    "date": {
+                        "created": 1388275200000
+                    },
+                    "type": [
+                        {
+                            "id": 4615,
+                            "name": "Volcano",
+                            "primary": true
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 83,
+                        "name": "El Salvador",
+                        "iso3": "slv"
+                    },
+                    "country": [
+                        {
+                            "id": 83,
+                            "name": "El Salvador",
+                            "primary": true,
+                            "iso3": "slv"
+                        }
+                    ]
                 }
             },
             {
                 "id": "13385",
                 "score": 1,
                 "fields": {
-                    "name": "South Sudan: Measles Outbreak - Sep 2013"
+                    "description": "A total of 43 suspected cases of measles were reported in Malakal County in South Sudan's Upper Nile State since August 2013, according to the Upper Nile State Ministry of Health and WHO. A mass measles vaccination campaign was launched targeting over 31,300 children. ([OCHA, 29 Sep 2013](/node/606536))\r\n\r\nThe ongoing displacement caused by the violence that broke out on 15 Dec has led to an increase in measles cases and deaths. By the beginning of February 2014, 522 suspected cases and 77 related deaths had been recorded in IDPs camps. ([WHO, 4 Feb 2014](/node/635142))",
+                    "name": "South Sudan: Measles Outbreak - Sep 2013",
+                    "primary_type": {
+                        "id": 4642,
+                        "name": "Epidemic"
+                    },
+                    "date": {
+                        "created": 1380412800000
+                    },
+                    "type": [
+                        {
+                            "id": 4642,
+                            "name": "Epidemic",
+                            "primary": true
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 8657,
+                        "name": "South Sudan",
+                        "shortname": "South Sudan",
+                        "iso3": "ssd"
+                    },
+                    "country": [
+                        {
+                            "id": 8657,
+                            "name": "South Sudan",
+                            "primary": true,
+                            "shortname": "South Sudan",
+                            "iso3": "ssd"
+                        }
+                    ]
                 }
             },
             {
                 "id": "13094",
                 "score": 1,
                 "fields": {
-                    "name": "Typhoon Utor - Aug 2013"
+                    "description": "Typhoon Utor (locally known as Labuyo) made landfall over Aurora province in the eastern part of the Philippines' Central Luzon region in the early morning of 12 Aug 2013 with a category 3 status, affecting 281,700 people in 16 of the countries 80 province. Eight people were killed and almost 60,000 left their homes and took shelter. Over 12,000 houses were damaged of which 1,440 (or about 12 per cent) were destroyed. ([OCHA, 15 Aug 2013](/node/595851))\r\n\r\nIn China, heavy rains and flooding caused by the typhoon affected 4 million people in the southern Guangdong Province, with 20 people killed and seven missing. 513,000 people were relocated and 19,000 houses were damaged. The national Government has launched an emergency response to help disaster relief. ([OCHA, 19 Aug 2013](/node/596467))\r\n\r\n###Useful Links\r\n- [<img width=\"220\" height=\"32\" src=\"http://www.humanitarianresponse.info/sites/all/themes/humanitarianresponse/logo.png\">](http://philippines.humanitarianresponse.info/)\r\n- [National Disaster Risk Reduction & Management Council (NDRRMC)](http://www.ndrrmc.gov.ph/)  ",
+                    "name": "Typhoon Utor - Aug 2013",
+                    "primary_type": {
+                        "id": 4618,
+                        "name": "Tropical Cyclone"
+                    },
+                    "date": {
+                        "created": 1376265600000
+                    },
+                    "type": [
+                        {
+                            "id": 4618,
+                            "name": "Tropical Cyclone",
+                            "primary": true
+                        },
+                        {
+                            "id": 4611,
+                            "name": "Flood"
+                        },
+                        {
+                            "id": 4728,
+                            "name": "Land Slide"
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 188,
+                        "name": "Philippines",
+                        "shortname": "Philippines",
+                        "iso3": "phl"
+                    },
+                    "country": [
+                        {
+                            "id": 188,
+                            "name": "Philippines",
+                            "primary": true,
+                            "shortname": "Philippines",
+                            "iso3": "phl"
+                        },
+                        {
+                            "id": 58,
+                            "name": "China",
+                            "iso3": "chn"
+                        },
+                        {
+                            "id": 59,
+                            "name": "China - Hong Kong (Special Administrative Region)",
+                            "iso3": "hkg"
+                        }
+                    ]
                 }
             },
             {
                 "id": "13020",
                 "score": 1,
                 "fields": {
-                    "name": "Georgia: Flash Floods - Jul 2013"
+                    "description": "On 19 Jul 2013, heavy rains caused flooding and considerable damage in several parts of Georgia, especially in the west, affecting 1,900 people, who are in need of food and non-food items ([IFRC, 26 Jul 2013](/node/591762)).\r\n\r\nOn 17-18 Aug, heavy rains caused flooding in the Guria region. Houses and agricultural lands were flooded and around 30 families were affected. ([IFRC, 22 Aug 2013](/node/597440))",
+                    "name": "Georgia: Flash Floods - Jul 2013",
+                    "primary_type": {
+                        "id": 4624,
+                        "name": "Flash Flood"
+                    },
+                    "date": {
+                        "created": 1374192000000
+                    },
+                    "type": [
+                        {
+                            "id": 4624,
+                            "name": "Flash Flood",
+                            "primary": true
+                        },
+                        {
+                            "id": 4611,
+                            "name": "Flood"
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 100,
+                        "name": "Georgia",
+                        "iso3": "geo"
+                    },
+                    "country": [
+                        {
+                            "id": 100,
+                            "name": "Georgia",
+                            "primary": true,
+                            "iso3": "geo"
+                        }
+                    ]
                 }
             },
             {
                 "id": "12779",
                 "score": 1,
                 "fields": {
-                    "name": "Ecuador: Drought - Jun 2013"
+                    "description": "As of June 2013, Ecuador’s southern region has gone for four months without rain, with Loja being the most affected province. The provincial economy is completely based on agricultural and livestock. The drought has caused losses in corn, peanut, and bean crops and there is a high scarcity of food and foliage for cattle. An assessment has identified 1,025 directly affected households, all people of limited resources, mostly small-scale farmers, daily wage laborers and livestock producers. They are at the lowest poverty levels in the country and in a zone that has high levels of malnutrition. ([IFRC, 11 Jun 2013](/node/582235))",
+                    "name": "Ecuador: Drought - Jun 2013",
+                    "primary_type": {
+                        "id": 4672,
+                        "name": "Drought"
+                    },
+                    "date": {
+                        "created": 1370908800000
+                    },
+                    "type": [
+                        {
+                            "id": 4672,
+                            "name": "Drought",
+                            "primary": true
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 81,
+                        "name": "Ecuador",
+                        "iso3": "ecu"
+                    },
+                    "country": [
+                        {
+                            "id": 81,
+                            "name": "Ecuador",
+                            "primary": true,
+                            "iso3": "ecu"
+                        }
+                    ]
                 }
             },
             {
                 "id": "12731",
                 "score": 1,
                 "fields": {
-                    "name": "Armenia: Hail Storm - May 2013"
+                    "description": "Between 12 to 17 May 2013, devastating hail storms damaged almost all yield capacity of more than half of the communities in Armenia's Armavir region. The disaster affected 46 communities, 12,800 households and over 5,000 hectares of agricultural lands in the region. More than 7,100 households have lost 100 per cent of their farms' yield capacity. ([IFRC, 5 Jun 2013](/node/580803))",
+                    "name": "Armenia: Hail Storm - May 2013",
+                    "primary_type": {
+                        "id": 4656,
+                        "name": "Severe Local Storm"
+                    },
+                    "date": {
+                        "created": 1370390400000
+                    },
+                    "type": [
+                        {
+                            "id": 4656,
+                            "name": "Severe Local Storm",
+                            "primary": true
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 23,
+                        "name": "Armenia",
+                        "iso3": "arm"
+                    },
+                    "country": [
+                        {
+                            "id": 23,
+                            "name": "Armenia",
+                            "primary": true,
+                            "iso3": "arm"
+                        }
+                    ]
                 }
             },
             {
                 "id": "12700",
                 "score": 1,
                 "fields": {
-                    "name": "South Sudan: Meningitis Outbreak - May 2013"
+                    "description": "On 30 Apr 2013, South Sudan's Ministry of Health declared an outbreak of meningitis in Malakal County, Upper Nile State. As of 27 May, 141 cases and five deaths were reported from Malakal county, two cases from Jonglei state and eight cases from Aweil West county. ([WHO, 26 May 2013](/node/579581))\r\n\r\nAn estimated 123,520 people, covering 80 per cent of the target population of people between two and 30 years of age, were vaccinated by 24 May as part of a mass-immunization campaign in Upper Nile State. ([OCHA, 26 May 2013](/node/579326))\r\n\r\n",
+                    "name": "South Sudan: Meningitis Outbreak - May 2013",
+                    "primary_type": {
+                        "id": 4642,
+                        "name": "Epidemic"
+                    },
+                    "date": {
+                        "created": 1369526400000
+                    },
+                    "type": [
+                        {
+                            "id": 4642,
+                            "name": "Epidemic",
+                            "primary": true
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 8657,
+                        "name": "South Sudan",
+                        "shortname": "South Sudan",
+                        "iso3": "ssd"
+                    },
+                    "country": [
+                        {
+                            "id": 8657,
+                            "name": "South Sudan",
+                            "primary": true,
+                            "shortname": "South Sudan",
+                            "iso3": "ssd"
+                        }
+                    ]
                 }
             },
             {
                 "id": "12659",
                 "score": 1,
                 "fields": {
-                    "name": "Horn of Africa: Polio Outbreak - May 2013"
+                    "description": "The Horn of Africa is experiencing an outbreak of wild poliovirus type 1 (WPV1). Six cases have been confirmed, four from Somalia (Banadir and Bay region) and two from Kenya (Dadaab in north-­‐eastern Kenya). The first case was confirmed in Somalia on 9 May 2013 and in Kenya on 22 May. This is the first outbreak in Somalia since 2007 and in Kenya since 2011. Outbreak campaigns have been launched in both countries. Immunization campaigns are planned and being conducted in neighboring Ethiopia and Yemen to boost population immunity levels and minimize the risk of spread of the outbreak. ([Global Polio Eradication Initiative, 30 May 2013](/node/580809))\r\n\r\nAs of 1 Jul, 25 cases had been reported from Somalia (primarily from Banadir region) and six from Kenya (Dadaab in north-eastern Kenya) ([Global Polio Eradication Initiative, 1 Jul 2013](/node/586736)). As of 14 Aug, Somalia had the worst outbreak in the world in a non-endemic country with 105 cases confirmed. About 10 cases of wild polio had been confirmed in Kenya. ([OCHA, 15 Aug 2013](/node/596042))\r\n\r\nAs of 14 Oct, six cases of polio had been confirmed in Ethiopia ([IFRC, 25 Oct 2013](/node/611554)).\r\n\r\nThree cases had been reported in South Sudan, but were retracted on 26 Oct due to laboratory error ([IFRC, 29 Oct 2013](/node/612201)).\r\n\r\nAs of the end of 2013, the polio outbreak in the Horn of Africa was on the decline and the total number of polio cases stood at 203 (183 from Somalia, 14 from Kenya and six from Ethiopia). The most recent case in the region had onset of paralysis on 9 Oct (from Lower Shabelle, Somalia). ([Global Polio Eradication Initiative, 24 Dec 2013](/node/626379))\r\n\r\nIn mid-January 2014, new cases were reported from Ethiopia and Somalia. The total number of WPV1 cases in the Horn of Africa is now 213 (189 from Somalia, 14 from Kenya and nine from Ethiopia). The most recent WPV1 case in the region had onset of paralysis on 20 December (from Bossaso district, Bariregion in Somalia). Outbreak response across the Horn of Africa is on-going. ([Global Polio Eradication Initiative, 22 Jan 2014](/node/631735))\r\n",
+                    "name": "Horn of Africa: Polio Outbreak - May 2013",
+                    "primary_type": {
+                        "id": 4642,
+                        "name": "Epidemic"
+                    },
+                    "date": {
+                        "created": 1369440000000
+                    },
+                    "type": [
+                        {
+                            "id": 4642,
+                            "name": "Epidemic",
+                            "primary": true
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 131,
+                        "name": "Kenya",
+                        "iso3": "ken"
+                    },
+                    "country": [
+                        {
+                            "id": 131,
+                            "name": "Kenya",
+                            "primary": true,
+                            "iso3": "ken"
+                        },
+                        {
+                            "id": 87,
+                            "name": "Ethiopia",
+                            "iso3": "eth"
+                        },
+                        {
+                            "id": 216,
+                            "name": "Somalia",
+                            "iso3": "som"
+                        },
+                        {
+                            "id": 8657,
+                            "name": "South Sudan",
+                            "shortname": "South Sudan",
+                            "iso3": "ssd"
+                        },
+                        {
+                            "id": 255,
+                            "name": "Yemen",
+                            "iso3": "yem"
+                        }
+                    ]
                 }
             },
             {
                 "id": "12589",
                 "score": 1,
                 "fields": {
-                    "name": "Tropical Cyclone Mahasen - May 2013"
-                }
-            },
-            {
-                "id": "12464",
-                "score": 1,
-                "fields": {
-                    "name": "Afghanistan: Earthquake - Apr 2013"
-                }
-            },
-            {
-                "id": "12363",
-                "score": 1,
-                "fields": {
-                    "name": "Kenya: Floods - Mar 2013"
-                }
-            },
-            {
-                "id": "12344",
-                "score": 1,
-                "fields": {
-                    "name": "Iran: Earthquake - Apr 2013"
-                }
-            },
-            {
-                "id": "12197",
-                "score": 1,
-                "fields": {
-                    "name": "Namibia: Floods - Mar 2013"
-                }
-            },
-            {
-                "id": "12091",
-                "score": 1,
-                "fields": {
-                    "name": "Zambia: Floods - Jan 2013"
-                }
-            },
-            {
-                "id": "11966",
-                "score": 1,
-                "fields": {
-                    "name": "Malawi: Floods - Jan 2013"
-                }
-            },
-            {
-                "id": "11959",
-                "score": 1,
-                "fields": {
-                    "name": "Solomon Islands: Earthquake and Tsunami - Feb 2013"
-                }
-            },
-            {
-                "id": "11834",
-                "score": 1,
-                "fields": {
-                    "name": "Indonesia: Floods - Jan 2013"
-                }
-            },
-            {
-                "id": "11783",
-                "score": 1,
-                "fields": {
-                    "name": "India: Cold Wave - Jan 2013"
-                }
-            },
-            {
-                "id": "11757",
-                "score": 1,
-                "fields": {
-                    "name": "Kyrgyzstan: Cold Wave - Dec 2012"
+                    "description": "On 14 May, Cyclone Mahasen brought heavy rains and landslides to Sri Lanka, with seven people confirmed dead and 3,881 people displaced due to the resulting heavy rains and landslides. In Bangladesh, following the raising of warning signals to 7 from a possible 10 (expecting severe weather) for Cox’s Bazaar and Chittagong, the Government ordered the evacuation of about one million people from 15 coastal districts. In Myanmar, a total of 35,550 people were relocated from Sittwe, Minbya, Myauk U, Kyauktaw, Rathedaung, Myebon and Pauktaw in Rakhine state. ([OCHA, 15 May 2013](/node/576322))\r\n\r\nCyclone Mahasen made landfall in southern Bangladesh's Patuakhali district on 16 May, affecting almost 1.5 million people and killing 17. More than 26,500 houses were destroyed and almost 124,500 damaged. Large tracts of standing crops were flattened and numerous fish ponds and fish culture washed away. ([IFRC, 6 Jun 2013](/node/581071))\r\n\r\n###Useful Links\r\n- [Joint Typhoon Warning Center](http://jtwccdn.appspot.com/JTWC/)\r\n- [OCHA Regional Office in Asia and the Pacific (ROAP)](http://www.unocha.org/roap/)\r\n- [Myanmar Information Management Unit](http://themimu.info/Cyclone%20Mahasen/index.php)\r\n- [Bangladesh Ministry of Disaster Management and Relief](http://www.cdmp.org.bd/modules.php?name=Situation)\r\n- [Sri Lanka Humanitarian Response](http://srilanka.humanitarianresponse.info)\r\n- [Sri Lanka Disaster Management Center, Ministry of Disaster Management](http://www.dmc.gov.lk/index_english.htm)",
+                    "name": "Tropical Cyclone Mahasen - May 2013",
+                    "primary_type": {
+                        "id": 4618,
+                        "name": "Tropical Cyclone"
+                    },
+                    "date": {
+                        "created": 1368576000000
+                    },
+                    "type": [
+                        {
+                            "id": 4618,
+                            "name": "Tropical Cyclone",
+                            "primary": true
+                        },
+                        {
+                            "id": 4624,
+                            "name": "Flash Flood"
+                        },
+                        {
+                            "id": 4611,
+                            "name": "Flood"
+                        },
+                        {
+                            "id": 4728,
+                            "name": "Land Slide"
+                        },
+                        {
+                            "id": 4814,
+                            "name": "Mud Slide"
+                        }
+                    ],
+                    "primary_country": {
+                        "id": 31,
+                        "name": "Bangladesh",
+                        "iso3": "bgd"
+                    },
+                    "country": [
+                        {
+                            "id": 31,
+                            "name": "Bangladesh",
+                            "primary": true,
+                            "iso3": "bgd"
+                        },
+                        {
+                            "id": 119,
+                            "name": "India",
+                            "iso3": "ind"
+                        },
+                        {
+                            "id": 165,
+                            "name": "Myanmar",
+                            "iso3": "mmr"
+                        },
+                        {
+                            "id": 219,
+                            "name": "Sri Lanka",
+                            "iso3": "lka"
+                        }
+                    ]
                 }
             }
         ]
