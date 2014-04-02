@@ -36,7 +36,8 @@
     "fb": "~0.6.2",
     "fast-csv": "0.2.2",
     "unzip": "~0.1.9",
-    "validator": "~3.5.0"
+    "validator": "~3.5.0",
+    "nodetime": "0.8.15"
   },
   "devDependencies": {
     "mocha": "1.13.0",
