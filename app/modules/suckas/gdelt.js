@@ -21,7 +21,7 @@ Gdelt.definition = {
   frequency: "repeats",
   repeatsEvery: "day",
   startDate: moment('2014-03-19', 'YYYY-MM-DD'),
-  endDate: moment('2015-03-22', 'YYYY-MM-DD')
+  endDate: moment('2014-03-22', 'YYYY-MM-DD')
 };
 
 Gdelt.prototype.suck = function() {
