@@ -57,12 +57,12 @@ statics.upsert = function(data, conditions) {
         
         // we did not find an item matching the query conditions, so make one
         if(!obj) {
-          logger.info("utils.upsert creating new record");
+          //logger.info("utils.upsert creating new record");
           obj = new that(data);
         }
         // extend the item we found with new data
         else {
-          logger.info("utils.upsert updating existing record");
+          //logger.info("utils.upsert updating existing record");
           //console.log("-------------------------");
           //console.log(JSON.stringify(obj));
           //console.log(data);
@@ -96,7 +96,7 @@ statics.saveList = function(data, upsertProperties) {
     return that.upsert(obj, upsertProperties);
   });
 
-  logger.info("saveList have funcs");
+  //logger.info("saveList have funcs");
   return Promise.all(funcs);
 };
 

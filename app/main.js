@@ -141,7 +141,7 @@ App.prototype.processErrorHandling = function() {
         that.bus.emit("error", {sourceType: matches[1]}, null, e.message);
       }
       else {
-        logger.error(e.message);
+        logger.error(e);
       }
       process.exit();
     }
@@ -198,7 +198,7 @@ App.prototype.setupBus = function() {
      * @param {Object} source - Source model instance
      */
     function(data, source) { 
-      logger.info("sucka.App.setupBus trying to store data");
+      //logger.info("sucka.App.setupBus trying to store data");
 
       // `saveList` does an "upsert" on each item in the `data` array. The 
       // second argument is a list of the properties we will use to check if 
@@ -206,7 +206,7 @@ App.prototype.setupBus = function() {
       store.Item.upsert(data, ["remoteID", "source"])
       .then(
         function(item) {
-          logger.info("sucka.App.setupBus store data success id " + item.id);
+          //logger.info("sucka.App.setupBus store data success id " + item.id);
           // Pass to the transformation pipeline
           logger.info("sucka.App.postSuck transformQueue publish " + JSON.stringify({id:item.id}));
           that.transformQueue.push("transform", JSON.stringify({id:item.id}));
