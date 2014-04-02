@@ -54,7 +54,7 @@ App.prototype.start = function() {
 
   this.transformQueue = new RedisQueue(makeRedisClient());
 
-  //this.processErrorHandling();
+  this.processErrorHandling();
 
   // Setup the shared message bus used by all sucka instances
   this.setupBus();
