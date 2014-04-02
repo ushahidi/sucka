@@ -54,6 +54,7 @@ Gdelt.prototype.suck = function() {
   file.on('finish', function() {
     logger.info("Gdelt suck finished writing zip");
     file.close();
+    file = null;
 
     that.processData(zipFilePath, null, null, today);
   });
@@ -112,6 +113,8 @@ Gdelt.prototype.unzipFile = function(zipFilePath, today, newFilePath) {
         newFile.on('finish', function() {
           logger.info("Gdelt.unzipFile zip file extracted");
           resolve(newFilePath);
+          newFile.close();
+          newFile = null;
         });
       }
       else {
@@ -146,6 +149,7 @@ Gdelt.prototype.findRelevantRecords = function(csvFilePath, outputPath, dateStri
     .on("end", function(){
       logger.info('Gdelt.findRelevantRecords finished csv parsing');
       outputStream.close();
+      outputStream = null;
       resolve(outputPath);
     });
   });

@@ -12,6 +12,12 @@ var config = require('config')
   , store = require("./modules/cn-store-js");
 
 
+require('nodetime').profile({
+  accountKey: 'e5947aaedfd2a96793e51556972b46758c92bdd1', 
+  appName: 'Sucka'
+});
+
+
 // Start kue web server on port 3000
 // @TODO secure this in production
 var kue = require('kue');
