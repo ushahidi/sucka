@@ -56,7 +56,8 @@ var itemSchema = mongoose.Schema({
      */
     remoteID: {
       type: String,
-      required: true
+      required: true,
+      index: true
     },
     /**
      * Optional field indicating how long this item should be considered 
@@ -154,7 +155,10 @@ var itemSchema = mongoose.Schema({
     /**
      * Reference to the Source document that led to this item being retrieved.
      */
-    source: String,
+    source: {
+      type: String,
+      index: true
+    },
     license: {
       type: String,
       required: true,
