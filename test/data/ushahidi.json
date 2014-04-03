@@ -1,0 +1,215 @@
+[
+    {
+        "incident": {
+            "incidentid": "7",
+            "incidenttitle": "Satisfaction in the Parc La Fontaine",
+            "incidentdescription": "Here I am in Parc La Fontaine, talking about the artist-in-crisis. The strategic artist plots his subjective, inward states onto the map of the Greater Montréal Region, in what is both Soundwalk and Alternate Reality Game. I was joyful and felt a sentiment of deep satisfaction. It is a beautiful day in Montréal.",
+            "incidentdate": "2010-08-10 23:01:00",
+            "incidentmode": "1",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "12",
+            "locationname": "Parc La Fontaine, Montreal, Quebec, Canada",
+            "locationlatitude": "45.524089",
+            "locationlongitude": "-73.570075"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+        "media": [
+            [
+                null
+            ]
+        ],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "8",
+            "incidenttitle": "Napoleonic Epiphany on Role of The Strategic Artist",
+            "incidentdescription": "Here I describe the artist-in-crisis as a kind of Napoleonic figure. The strategic artist plots his life on the map, a testament to his own subjective inward glance. The strategic artist is a moral artist, plotting moral temperature readings. See: Psychogeography, Soundwalk, NoiseMap, Alternate Reality Game, Tactical Role-Playing Game.",
+            "incidentdate": "2010-08-10 11:40:00",
+            "incidentmode": "1",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "13",
+            "locationname": "Corner of Napoleon Street and Mentana, Plateau Mont-Royal, Mtl, Qc",
+            "locationlatitude": "45.523368",
+            "locationlongitude": "-73.57162"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [
+            [
+                null
+            ],
+            [
+                null
+            ]
+        ],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "9",
+            "incidenttitle": "Update",
+            "incidentdescription": "Imagine a Soundwalk that is also an Alternate Reality Game. #zoeticalive",
+            "incidentdate": "2010-08-10 09:30:00",
+            "incidentmode": "4",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "14",
+            "locationname": "Mentana Street, Plateau Mont-Royal, Mtl, Qc",
+            "locationlatitude": "45.523097",
+            "locationlongitude": "-73.571706"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "5",
+            "incidenttitle": "Zoetica Live: Epiphany",
+            "incidentdescription": "Today consisted mainly of a series of small epiphanies. Very revealing. I am happy about this. #zoeticalive\n\nI took a walk, visited my old neighborhood. I used to live on Rue de Bullion on the Plateau Mont-Royal. Attached is a painting from that period, circa spring-summer, 2009.",
+            "incidentdate": "2010-08-09 20:46:00",
+            "incidentmode": "4",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "5",
+            "locationname": "Rue de Bullion, Plateau Mont-Royal, Montréal, Québec, Canada",
+            "locationlatitude": "45.518947",
+            "locationlongitude": "-73.579903"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [
+            [
+                null
+            ]
+        ],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "3",
+            "incidenttitle": "Zoetica Live InfoCast #1",
+            "incidentdescription": "This is my first video for the Zoetica Life project, which is a strategic intermedia art project currently deployed in the Greater Montréal Region. On the Zoetica Live Crowdmap, you can follow me through my everyday life, as I travel from place to place. It is a travelogue, a lifelog, a lifestream, and a form of autobiographical critical photo-journalism. At the moment of the taking of this videoclip, I felt appeased, thinking about what is before me as I travel across time, a Pilgrim of the Dark Backward, an Artist of the Cloud & Cloud Economics.",
+            "incidentdate": "2010-08-09 20:29:00",
+            "incidentmode": "1",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "3",
+            "locationname": "Parc La Fontaine, Montreal, Quebec, Canada",
+            "locationlatitude": "45.523217",
+            "locationlongitude": "-73.567286"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [
+            [
+                null
+            ],
+            [
+                null
+            ]
+        ],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "2",
+            "incidenttitle": "A moment of repose",
+            "incidentdescription": "I was dying of thirst, it was passed midnight, and I didn't know of any cornerstores open 24 hours, so I went and bought a rather expensive 7-UP at L'Barouf on St-Denis Street near Rachel.\n\nI was appeased; my devilish thirst was fully assuaged.",
+            "incidentdate": "2010-08-09 19:47:00",
+            "incidentmode": "1",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "2",
+            "locationname": "L'Barouf, St-Denis Street, Montréal, Québec",
+            "locationlatitude": "45.521203",
+            "locationlongitude": "-73.577628"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [
+            [
+                null
+            ]
+        ],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "1",
+            "incidenttitle": "Zoetica Live is Now Live!",
+            "incidentdescription": "Zoetica Live is a strategic intermedia art project currently deployed in the Greater Montréal Region. Stay tuned for further developments. Pax vobiscum. Peace be with you.",
+            "incidentdate": "2010-08-09 17:30:00",
+            "incidentmode": "1",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "1",
+            "locationname": "Parc La Fontaine, Montreal, Quebec, Canada",
+            "locationlatitude": "45.523247",
+            "locationlongitude": "-73.567114"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [
+            [
+                null
+            ]
+        ],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "6",
+            "incidenttitle": "In The Park Across The Street From My Old Place",
+            "incidentdescription": "I had a mystical experience in September, 2008, across the street from my old apartment. It was just after I moved out. I came to get some important mail that had come for me. It was a bland day, I was received with disrespect and indignity by my old roommates.",
+            "incidentdate": "2008-09-01 13:01:00",
+            "incidentmode": "1",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "6",
+            "locationname": "Rue de Bullion, Plateau Mont-Royal, Montréal, Québec, Canada",
+            "locationlatitude": "45.519218",
+            "locationlongitude": "-73.579516"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [],
+        "comments": [],
+        "customfields": []
+    },
+    {
+        "incident": {
+            "incidentid": "4",
+            "incidenttitle": "My Dark Night of The Soul",
+            "incidentdescription": "I lived in an apartment in Nortchliffe, many years ago. I was so unhappy there. I have qualified this post under the categories of Dies irae, Los, and Pain, because I was a confused, violently crazy man, and experienced nothing but the dark pit of grief, loss, and spiritual nakedness. Hence, I call it My Dark Night of The Soul. I have included a self-portrait (oil painting) that I made during the period that I lived in NDG. This is a segment of Zoetica Live Past.",
+            "incidentdate": "2003-12-06 20:35:00",
+            "incidentmode": "1",
+            "incidentactive": "1",
+            "incidentverified": "1",
+            "locationid": "4",
+            "locationname": "Apartment on Northcliffe Avenue, Notre-Dame-de-Grace, Québec",
+            "locationlatitude": "45.473464",
+            "locationlongitude": "-73.605223"
+        },
+        "categories":[{"category":{"id":1,"title":"Besetzungen"}},{"category":{"id":8,"title":"Polizei\/Security"}}],
+
+        "media": [
+            [
+                null
+            ]
+        ],
+        "comments": [],
+        "customfields": []
+    }
+]
