@@ -7,7 +7,8 @@ var Sucka = require("./sucka")
   , moment = require("moment")
   , _ = require("underscore")
   , _s = require("underscore.string")
-  , request = require("request");
+  , request = require("request")
+  , async = require('async');
 
 var UshahidiSucka = function() {};
 UshahidiSucka.prototype = Object.create(Sucka.prototype);
@@ -21,57 +22,57 @@ UshahidiSucka.definition = {
   endDate: moment('2015-04-05', 'YYYY-MM-DD')
 };
 
-
-UshahidiSucka.prototype.suck = function() {
+UshahidiSucka.prototype.getInstanceIDs = function(callback) {
   var that = this;
-  
   var url = 'http://tracker.ushahidi.com/list';
   
   var propertiesObject = {
     return_vars: "url",
     limit: "0,10000"
   };
-    
+
   request({url:url, qs:propertiesObject, json:true}, function(err, response, body) {
-    if(err) { that.handleError(err); return; }
-
-    var data = response.body;
-    var keys = _(data).keys();
-
-    that.retrievedInstances = 0;
-    that.totalInstances = keys.length;
-    if(that.source) {
-      that.lastRetrieved = that.source.lastRetrieved || {};
-    }
-    else {
-      that.lastRetrieved = {};
-    }
-
-    _(keys).each(function(key) {
-      var propertiesObject = {
-        task: 'incidents'
-      };
-
-      if(that.lastRetrieved[key]) {
-        propertiesObject.by = 'sinceid';
-        propertiesObject.id = that.lastRetrieved[key];
-      }
-
-      request({url: data[key].url + 'api', qs: propertiesObject, json:true}, function(err, response, body) {
-        if(!err && response.body && response.body.payload && response.body.payload.incidents) {
-          that.transform(response.body.payload.incidents, key);
-        }
-        that.retrievedInstances++;
-
-        //console.log("|||--- " + that.retrievedInstances + " --- " + that.totalInstances + " ---|||");
-
-        if(that.retrievedInstances >= that.totalInstances) {
-          that.allFinished(that.lastRetrieved);
-        }
-      });
-    });
-
+    var keys = _(response.body).keys();
+    var tuples = keys.map(function(key) { return [key, response.body[key].url + 'api'] });
+    callback.call(that, err, tuples);
   });
+};
+
+UshahidiSucka.prototype.getInstanceData = function(err, tuples) {
+  var that = this;
+  var propertiesObject = {
+    task: 'incidents'
+  };
+
+  var funcs = [];
+  that.lastRetrieved = that.lastRetrieved || {};
+
+  
+  _(tuples).each(function(tuple) {
+    
+    if(that.lastRetrieved[tuple[0]]) {
+      propertiesObject.by = 'sinceid';
+      propertiesObject.id = that.lastRetrieved[tuple[0]];
+    }
+
+    request({url: tuple[1], qs: propertiesObject, json:true}, function(err, response, body) {
+      //that.returnData({'remoteID': tuple[0], 'source':'test'});
+      if(err) return null;
+      if(!response.body || !response.body.payload || !response.body.payload.incidents) return null;
+
+      that.transform(response.body.payload.incidents, tuple[0]);
+      response.body.payload = null;
+      delete response.body.payload;
+      //transform([{'remoteID': '405', 'source':'test'}]);
+    });
+  });
+
+};
+
+
+UshahidiSucka.prototype.suck = function() {
+  var that = this;
+  that.getInstanceIDs(that.getInstanceData);
 };
 
 
@@ -83,8 +84,8 @@ UshahidiSucka.prototype.transform = function(inputData, instanceID) {
 
   //console.log(inputData);
 
-  var outputData = inputData.map(function(item) {
-    return {
+  _(inputData).each(function(item) {
+    var transformed = {
       remoteID: instanceID + "-" + item.incident.incidentid,
       publishedAt: new Date(item.incident.incidentdate),
       content: item.incident.incidentdescription,
@@ -114,13 +115,14 @@ UshahidiSucka.prototype.transform = function(inputData, instanceID) {
           }
         });
       })()
-    }
+    };
+
+    item = null;
+    that.returnData(transformed);
   });
 
-  _(outputData).each(function(item) {
-    that.returnData(item);
-  });
 
+  /*
   var lastRetrievedDoc = _(_(outputData).sortBy(function(doc) {
     return (new Date(doc.publishedAt)).getTime();
   })).last();
@@ -128,6 +130,7 @@ UshahidiSucka.prototype.transform = function(inputData, instanceID) {
   that.lastRetrieved[instanceID] = lastRetrievedDoc.remoteID;
 
   return outputData;
+  */
   
 };
 

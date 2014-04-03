@@ -101,14 +101,13 @@ sourceSchema.methods.repeatMilliseconds = function() {
   }
 };
 
-sourceSchema.statics.findActive = function() {
+sourceSchema.statics.findActive = function(callback) {
   var now = Date.now();
-  var query = this.find({
+  this.find({
     status: 'active', 
     startDate: {'$lte': now}, 
     endDate: {'$gte': now}
-  });
-  return query.exec();
+  }, callback);
 };
 
 // specify the transform schema option

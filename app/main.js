@@ -9,13 +9,18 @@ var config = require('config')
   , suckas = require('require-all')(__dirname + '/modules/suckas')
   , Promise = require('promise')
   , EventEmitter = require('events').EventEmitter
-  , store = require("./modules/cn-store-js");
+  , store = require("./modules/cn-store-js")
+  , async = require('async');
 
 
+/*
 require('nodetime').profile({
   accountKey: 'e5947aaedfd2a96793e51556972b46758c92bdd1', 
   appName: 'Sucka'
 });
+*/
+
+var util = require('util');
 
 
 // Start kue web server on port 3000
@@ -54,7 +59,7 @@ App.prototype.start = function() {
 
   this.transformQueue = new RedisQueue(makeRedisClient());
 
-  this.processErrorHandling();
+  //this.processErrorHandling();
 
   // Setup the shared message bus used by all sucka instances
   this.setupBus();
@@ -68,27 +73,23 @@ App.prototype.start = function() {
    */
   this.db.once('open', function() {
     logger.info("sucka db ready");
-    that.setupSources(suckas)
-      .then(that.getActiveSources,
-        function(err) {
-          logger.error('failed to get sources ' + err);
-        })
-       /**
-        * Now that we've added any new suckas/sources that have been committed since
-        * the last process restart, we're ready to suck those sources.
-        */
-      .then(function(sources) {
-          if(_(sources).isEmpty()) {
-            logger.warn("no sources found");
-            return false;
-          }
+    
+    that.setupSources(function(err) {
+      if(err) return logger.error("Problem setting up sources");
+      
+      store.Source.findActive(function(err, sources) {
+        if(err) return logger.error("Error getting active sources");
 
-          logger.info("sucka initiating sucking for " + _(sources).pluck("id").toString());
-          that.initiateSucking(sources);
-        },
-        function(err) {
-          logger.error("failed to suck sources " + err);
-        });
+        if(_(sources).isEmpty()) {
+          logger.warn("no sources found");
+          return false;
+        }
+
+        logger.info("sucka initiating sucking for " + _(sources).pluck("id").toString());
+        that.initiateSucking(sources);
+      });
+    });
+    
   });
 
   // Check for delayed jobs that need to be promoted. This runs every 5 seconds
@@ -103,19 +104,24 @@ App.prototype.start = function() {
  * codebase in between process restarts, we need to check at startup for any 
  * new sources that haven't yet been added to the database (and add them).
  */
-App.prototype.setupSources = function(suckaModules) {
+App.prototype.setupSources = function(callback) {
   logger.info("App.setupSources called");
 
   var suckaSources = [];
 
-  _(_(suckaModules).keys()).each(function(key) {
-    var Sucka = suckaModules[key];
+  var upsertFunc = function(definition) {
+    return function(cb) { store.Source.upsert(definition, ["internalID"], cb) };
+  };
+
+  _(_(suckas).keys()).each(function(key) {
+    var Sucka = suckas[key];
     if(!_(Sucka.definition).isEmpty() && !_(Sucka.definition.internalID).isEmpty()) {
-      suckaSources.push(Sucka.definition);
+      suckaSources.push(upsertFunc(Sucka.definition));
     }
   });
 
-  return store.Source.saveList(suckaSources, ["internalID"]);
+  //return store.Source.saveList(suckaSources, ["internalID"]);
+  async.parallel(suckaSources, callback);
 };
 
 App.prototype.getActiveSources = function() {
@@ -204,31 +210,19 @@ App.prototype.setupBus = function() {
      * @param {Object} source - Source model instance
      */
     function(data, source) { 
-      //logger.info("sucka.App.setupBus trying to store data");
+      console.log(util.inspect(process.memoryUsage()));
 
-      // `saveList` does an "upsert" on each item in the `data` array. The 
-      // second argument is a list of the properties we will use to check if 
-      // the item already exists in the database.
-      store.Item.upsert(data, ["remoteID", "source"])
-      .then(
-        function(item) {
-          //logger.info("sucka.App.setupBus store data success id " + item.id);
-          // Pass to the transformation pipeline
-          logger.info("sucka.App.postSuck transformQueue publish " + JSON.stringify({id:item.id}));
+      store.Item.upsert(data, ["remoteID", "source"], function(err, item) {
+        if(!err) {
           that.transformQueue.push("transform", JSON.stringify({id:item.id}));
-        },
-        function(err) {
-          logger.error("sucka.App.setupBus error storing data");
-          /**
-           * If any of the models were not saved properly, then we have a 
-           * problem with this source that needs to be addressed. Pass as
-           * much information as possible to the error handler so we can
-           * take the source offline, and work with a snapshot of the data
-           * that caused the problem. 
-           */
-           that.handleBrokenSource(source, data, err);
+          item = null;
         }
-      );
+        else {
+          that.handleBrokenSource(source, data, err);
+        }
+
+        data = null;
+      });
     }
   );
 
@@ -316,7 +310,7 @@ App.prototype.initiateSucking = function(sources) {
     // Some sources will be sucked only once, once per processes, or need 
     // to be sucked for the first time, even if they'll repeat. Find 'em and
     // suck 'em.
-    that.shouldSuck(source).then(function(shouldSuck) {
+    that.shouldSuck(source, function(shouldSuck) {
       if(shouldSuck) {
         logger.info("sucka.App.initiateSucking should suck " + source.id);
         that.suckIt(source);
@@ -337,28 +331,26 @@ App.prototype.initiateSucking = function(sources) {
  *
  * @param {Object} source - Source model instance
  */
-App.prototype.shouldSuck = function(source) {
+App.prototype.shouldSuck = function(source, callback) {
   var that = this;
 
-  return new Promise(function (resolve, reject) {
-    if(source.frequency === "always") resolve(true)
-    else if(source.frequency === "once" && source.hasRun === false) resolve(true)
-    else if(source.frequency === "repeats") {
-      // If we don't have any scheduled tasks, suck it
-      kue.Job.rangeByType(source.id,'delayed', 0, 10, '', function (err, jobs) {
-          if (err) return that.bus.emit("error", err, source)
-          if (jobs.length) {
-            resolve(false);
-          }
-          else {
-            resolve(true);
-          }
-      });
-    }
-    else {
-      resolve(false)
-    }
-  });
+  if(source.frequency === "always") callback(true)
+  else if(source.frequency === "once" && source.hasRun === false) callback(true)
+  else if(source.frequency === "repeats") {
+    // If we don't have any scheduled tasks, suck it
+    kue.Job.rangeByType(source.id,'delayed', 0, 10, '', function (err, jobs) {
+        if (err) return that.bus.emit("error", err, source)
+        if (jobs.length) {
+          callback(false);
+        }
+        else {
+          callback(true);
+        }
+    });
+  }
+  else {
+    callback(false)
+  }
 };
 
 
@@ -374,7 +366,10 @@ App.prototype.suckIt = function(source, done) {
   var Sucka = that.getSuckaForSource(source);
   done = done || function() {};
 
-  if(Sucka) (new Sucka()).initialize(source, that.bus, done).suck()
+  if(Sucka) {
+    var sucka = new Sucka();
+    sucka.initialize(source, that.bus, done).suck()
+  }
 };
 
 
@@ -413,6 +408,7 @@ App.prototype.postSuck = function(sourceID, lastRetrieved) {
           .save(function(err, state) {
             if(err) return that.handleBrokenSource(source, null, err);
             logger.info("============= sucka.App.postSuck task created " + source.id + " ====================== ");
+            console.log(util.inspect(process.memoryUsage()));
           });
       }
     });
