@@ -85,17 +85,26 @@ UshahidiSucka.prototype.transform = function(inputData, instanceID) {
 
   var outputData = inputData.map(function(item) {
     return {
-      remoteID: item.incident.incidentid,
+      remoteID: instanceID + "-" + item.incident.incidentid,
       publishedAt: new Date(item.incident.incidentdate),
       content: item.incident.incidentdescription,
       summary: item.incident.incidenttitle,
       lifespan: "temporary",
-      geo: {
-        addressComponents: {
-          formattedAddress: item.incident.locationname
-        },
-        coords: [item.incident.locationlongitude, item.incident.locationlatitude]
-      },
+      geo: (function() {
+        var data = {
+          addressComponents: {
+            formattedAddress: item.incident.locationname
+          }
+        };
+
+        if(item.incident.locationlongitude && item.incident.locationlatitude) {
+          data.coords = [
+            item.incident.locationlongitude, 
+            item.incident.locationlatitude
+          ]
+        }
+        return data;
+      })(),
       source: "ushahidi",
       tags: (function() {
         return item.categories.map(function(category) {
