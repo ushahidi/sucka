@@ -210,7 +210,7 @@ App.prototype.setupBus = function() {
      * @param {Object} source - Source model instance
      */
     function(data, source) { 
-      console.log(util.inspect(process.memoryUsage()));
+      //console.log(util.inspect(process.memoryUsage()));
 
       store.Item.upsert(data, ["remoteID", "source"], function(err, item) {
         if(!err) {

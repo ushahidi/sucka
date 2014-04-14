@@ -14,7 +14,7 @@ ReliefSucka.definition = {
   frequency: "repeats",
   repeatsEvery: "day",
   startDate: moment('2014-03-30', 'YYYY-MM-DD'),
-  endDate: moment('2014-04-01', 'YYYY-MM-DD')
+  endDate: moment('2014-04-05', 'YYYY-MM-DD')
 };
 
 

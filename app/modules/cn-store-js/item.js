@@ -94,6 +94,7 @@ var itemSchema = mongoose.Schema({
         formattedAddress: String,
         streetNumber: String,
         streetName: String,
+        streetAddress: String,
         neighborhood: String,
         adminArea5: String, // city
         adminArea4: String, // county
