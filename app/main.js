@@ -408,7 +408,7 @@ App.prototype.postSuck = function(sourceID, lastRetrieved) {
           .save(function(err, state) {
             if(err) return that.handleBrokenSource(source, null, err);
             logger.info("============= sucka.App.postSuck task created " + source.id + " ====================== ");
-            console.log(util.inspect(process.memoryUsage()));
+            logger.info(util.inspect(process.memoryUsage()));
           });
       }
     });
