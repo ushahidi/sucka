@@ -33,6 +33,9 @@ UshahidiSucka.prototype.getInstanceIDs = function(callback) {
   };
 
   request({url:url, qs:propertiesObject, json:true}, function(err, response, body) {
+    if(err) return that.handleError(err);
+    if(!response) return false;
+
     var keys = _(response.body).keys();
     var tuples = keys.map(function(key) { return [key, response.body[key].url + 'api'] });
     callback.call(that, err, tuples);
