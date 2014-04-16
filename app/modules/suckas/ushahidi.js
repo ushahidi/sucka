@@ -17,7 +17,7 @@ UshahidiSucka.definition = {
   internalID: '9a916230-d72a-4f48-bcf6-0964caeafa70',
   sourceType: "ushahidi",
   frequency: "repeats",
-  repeatsEvery: "hour",
+  repeatsEvery: "minute",
   startDate: moment('2014-03-30', 'YYYY-MM-DD'),
   endDate: moment('2014-04-20', 'YYYY-MM-DD')
 };
