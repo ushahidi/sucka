@@ -9,6 +9,7 @@
     "prod-server": "NODE_ENV=production node app.js",
     "run-test": "NODE_ENV=test mocha",
     "setup-sources": "NODE_ENV=development node bin/setup-sources.js",
+    "setup-system-tags": "NODE_ENV=staging node bin/setup-system-tags.js",
     "make-docs": "doxx --template ./docs-template.jade --title \"Hey, Sucka\" --source ./app --target ../sucka-docs"
   },
   "repository": {
