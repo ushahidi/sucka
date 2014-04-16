@@ -51,7 +51,7 @@ describe('app', function(){
         sourceType: "twitter"
       };
 
-      app.shouldSuck(source).then(function(shouldSuck) {
+      app.shouldSuck(source, function(shouldSuck) {
         assert.ok(shouldSuck);
         done();
       });
@@ -66,7 +66,7 @@ describe('app', function(){
         hasRun: false
       };
 
-      app.shouldSuck(source).then(function(shouldSuck) {
+      app.shouldSuck(source, function(shouldSuck) {
         assert.ok(shouldSuck);
         done();
       });
@@ -79,7 +79,7 @@ describe('app', function(){
         sourceType: "twitter"
       };
 
-      app.shouldSuck(source).then(function(shouldSuck) {
+      app.shouldSuck(source, function(shouldSuck) {
         assert.notOk(shouldSuck);
         done();
       });

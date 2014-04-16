@@ -136,7 +136,7 @@ describe('Source', function(){
         sourceModel.save(callback);
       }
     ], function() {
-      Source.findActive().then(function(sources) {
+      Source.findActive(function(err, sources) {
         assert(sources.length === 1);
         assert(sources[0].sourceType === "awesome");
         done();
