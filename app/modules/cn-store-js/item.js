@@ -102,7 +102,17 @@ var itemSchema = mongoose.Schema({
       accuracy: Number,
       granularity: {
         type: String,
-        validate: validate('isIn', ['point', 'neighborhood', 'city', 'admin', 'country'])
+        validate: validate('isIn', [
+          'exact', 
+          'near-exact', 
+          'admin5',
+          'admin4',
+          'admin3', 
+          'admin2', 
+          'admin1', 
+          'estimated', 
+          'unclear'
+        ])
       },
       /**
        * Unlike address components above, these are clues to the location of 
