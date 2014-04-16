@@ -64,7 +64,7 @@ UshahidiSucka.prototype.getInstanceData = function(err, tuples) {
 
     request({url: tuple[1], qs: propertiesObject, json:true}, function(err, response, body) {
       //that.returnData({'remoteID': tuple[0], 'source':'test'});
-      if(response.body && response.body.payload && response.body.payload.incidents) {
+      if(response && response.body && response.body.payload && response.body.payload.incidents) {
         that.transform(response.body.payload.incidents, tuple[0]);
       }
       totalProcessed++;
