@@ -292,6 +292,7 @@ App.prototype.initiateSucking = function(sources) {
       // Perform a suck whenever this source has an active task in the queue. 
       // We use the source.id (string) as the task `type`/event name. 
       that.suckaQueue.process(source.id, function(task, done) {
+        logger.info("processing task for "+source.id);
         store.Source.findById(source.id, function(err, source) {
           if(err) {
             return logger.error("sucak.App.initiateSucking failed to find " + source.id);
