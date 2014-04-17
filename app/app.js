@@ -12,6 +12,7 @@ var config = require('config')
 
 var argv = require('minimist')(process.argv.slice(2));
 
+
 var getSuckaForSource = function(source) {
   var Sucka = suckas[source.sourceType];
   if(typeof Sucka === "undefined") {
@@ -29,6 +30,7 @@ var makeRedisClient = function() {
   redisClient.auth(config.queue.password);
   return redisClient;
 };
+
 
 var postSuck = function(source, lastRetrieved) {
   var sourceID = source.id;
@@ -102,7 +104,29 @@ var doSuck = function(source) {
 };
 
 
+/**
+ * Each `sucka` should come with a `definition` property that tells the system 
+ * how this `source` behaves (how often it should be retrieved, any filters 
+ * required when querying the source, etc). Because these will be added to the 
+ * codebase in between process restarts, we need to check at startup for any 
+ * new sources that haven't yet been added to the database (and add them).
+ */
+var setupSources = function() {
+  logger.info("setting up sources");
+
+  _(_(suckas).keys()).each(function(key) {
+    var sucka = suckas[key];
+    if(!_(sucka.definition).isEmpty() && !_(sucka.definition.internalID).isEmpty()) {
+      store.Source.upsert(sucka.definition, ["internalID"]);
+    }
+  });
+};
+
+
 var runApp = function() {
+  // pickup any new sources
+  setupSources();
+
   var getAndGo = function(sourceID) {
     store.Source.findById(sourceID, function(err, source) {
       if(err || !source) {
@@ -153,5 +177,6 @@ module.exports = {
   doSuck: doSuck,
   postSuck: postSuck,
   handleBrokenSource: handleBrokenSource,
-  getSuckaForSource: getSuckaForSource
+  getSuckaForSource: getSuckaForSource,
+  setupSources: setupSources
 };
