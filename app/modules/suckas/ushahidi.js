@@ -10,7 +10,7 @@ sucka.definition = {
   sourceType: "ushahidi",
   language: "javascript",
   frequency: "repeats",
-  repeatsEvery: "minute",
+  repeatsEvery: "hour",
   startDate: moment('2014-03-30', 'YYYY-MM-DD'),
   endDate: moment('2014-04-20', 'YYYY-MM-DD')
 };
