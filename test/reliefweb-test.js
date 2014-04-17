@@ -7,7 +7,7 @@ var config = require('config')
   , mongoose = require('mongoose')
   , clearDB  = require('mocha-mongoose')(config.dbURI)
   , store = require('../app/modules/cn-store-js')
-  , ReliefWeb = require('../app/modules/suckas/reliefweb');
+  , sucka = require('../app/modules/suckas/reliefweb');
 
 describe('reliefweb sucka', function(){
   beforeEach(function(done) {
@@ -28,8 +28,10 @@ describe('reliefweb sucka', function(){
     // Don't really read files like this. I'm only doing it here because it's 
     // a unit test, where we can revel in questionable coding practices. 
     var rwData = require('./data/relief-web-disaster-list.json');
-    var transformedData = (new ReliefWeb()).transform(rwData.data.list);
-    var rwModel = new store.Item(transformedData[0]);
+    var firstItem = rwData.data.list[0];
+    firstItem.idToUse = 1;
+    var transformedData = sucka.transform(firstItem);
+    var rwModel = new store.Item(transformedData);
 
     rwModel.save(function(err, item) {
       if(err) return done(err);
