@@ -7,7 +7,7 @@ var config = require('config')
   , mongoose = require('mongoose')
   , clearDB  = require('mocha-mongoose')(config.dbURI)
   , store = require('../app/modules/cn-store-js')
-  , Ushahidi = require('../app/modules/suckas/ushahidi');
+  , sucka = require('../app/modules/suckas/ushahidi');
 
 describe('ushahidi sucka', function(){
   beforeEach(function(done) {
@@ -32,10 +32,9 @@ describe('ushahidi sucka', function(){
     // Don't really read files like this. I'm only doing it here because it's 
     // a unit test, where we can revel in questionable coding practices. 
     var uData = require('./data/ushahidi.json');
-    var u = new Ushahidi();
-    u.lastRetrieved = {};
-    var transformedData = u.transform(uData,"1");
-    var uModel = new store.Item(transformedData[0]);
+
+    var transformedData = sucka.transform(uData[0],"1");
+    var uModel = new store.Item(transformedData);
 
     uModel.save(function(err, item) {
       if(err) return done(err);

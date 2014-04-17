@@ -85,17 +85,16 @@ var handleBrokenSource = function(source, data, error) {
 
 
 var doSuck = function(source) {
-  var Sucka = getSuckaForSource(source);
+  var sucka = getSuckaForSource(source);
 
-  if(Sucka) {
-    var sucka = new Sucka();
+  if(sucka) {
     var bus = new EventEmitter();
 
     bus.on("sucked", postSuck);
     bus.on("data", saveItem);
     bus.on("error", handleBrokenSource);
 
-    sucka.initialize(source, bus, function() {}).suck();
+    sucka.suck(source, bus);
   }
   else {
     logger.warn('No sucka found for '+source.sourceType+'|'+source.id);
