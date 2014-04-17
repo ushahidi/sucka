@@ -36,7 +36,7 @@ ReliefSucka.prototype.suck = function() {
     },
     limit: 100
   };
-
+  
   if(!_.isUndefined(that.source.lastRetrieved)) {
     propertiesObject.filter = {
       field: "date.created",

@@ -114,6 +114,7 @@ var itemSchema = mongoose.Schema({
           'unclear'
         ])
       },
+      mentionedPlaces: [String],
       /**
        * Unlike address components above, these are clues to the location of 
        * the content.
