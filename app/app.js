@@ -74,6 +74,10 @@ var saveItem = function(data, source) {
 
 
 var handleBrokenSource = function(source, data, error) {
+  if(_(source).isUndefined()) {
+    return logger.error('sucka.App.handleBrokenSource error for unknown source');
+  }
+
   logger.error("sucka.App.handleBrokenSource SOURCE ERROR " + source.id + " with type " + source.sourceType + " | " + error);
 
   if(_(source.id).isUndefined()) return false;
