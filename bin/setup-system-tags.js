@@ -9,6 +9,7 @@ var conflictTags = require('../data/conflict-tags.json');
 var disasterTags = require('../data/disaster-tags.json');
 var enthnicityTags = require('../data/ethnicity-tags.json');
 var knowngroupTags = require('../data/knowngroup-tags.json');
+var religionTags = require('../data/religion-tags.json');
 
 conflictTags = conflictTags.map(function(tag) {
   return {
@@ -38,7 +39,18 @@ knowngroupTags = knowngroupTags.map(function(tag) {
   }
 });
 
-var allTags = conflictTags.concat(disasterTags).concat(enthnicityTags).concat(knowngroupTags);
+religionTags = religionTags.map(function(tag) {
+  return {
+    name: tag,
+    categories: ['religion']
+  }
+});
+
+var allTags = conflictTags
+  .concat(disasterTags)
+  .concat(enthnicityTags)
+  .concat(knowngroupTags)
+  .concat(religionTags);
 
 db.once('open', function() {
   store.SystemTag.saveList(allTags, ['name']).then(function(tags) {
