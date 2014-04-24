@@ -11,7 +11,8 @@ sucka.definition = {
   frequency: "repeats",
   repeatsEvery: "day",
   startDate: moment('2014-03-30', 'YYYY-MM-DD'),
-  endDate: moment('2014-04-05', 'YYYY-MM-DD')
+  endDate: moment('2015-04-05', 'YYYY-MM-DD'),
+  description: "Historical and recent natural disaster reports from ReliefWeb's public API."
 };
 
 sucka.suck = function(source, bus) {

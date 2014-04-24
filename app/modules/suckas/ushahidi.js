@@ -12,7 +12,9 @@ sucka.definition = {
   frequency: "repeats",
   repeatsEvery: "hour",
   startDate: moment('2014-03-30', 'YYYY-MM-DD'),
-  endDate: moment('2015-04-20', 'YYYY-MM-DD')
+  endDate: moment('2015-04-20', 'YYYY-MM-DD'),
+  description: "Aggregated incident reports from all publicly accessible \
+  Ushahidi instances, both self-hosted and Crowdmap Classic."
 };
 
 sucka.suck = function(source, bus) {

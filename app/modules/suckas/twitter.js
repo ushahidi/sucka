@@ -21,7 +21,8 @@ TwitterSucka.definition = {
   endDate: moment('2014-03-20', 'YYYY-MM-DD'),
   filters: {
     searchString: 'traffic OR accident geocode:-1.292066,36.821946,15mi'
-  }
+  },
+  description: "Traffic incidents in or near Nairobi."
 };
 
 /**
