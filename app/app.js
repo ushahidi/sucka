@@ -4,6 +4,7 @@ var config = require('config')
   , mongoose = require('mongoose')
   , suckas = require('require-all')(__dirname + '/modules/suckas')
   , redis = require('redis')
+  , elasticsearch = require('elasticsearch')
   , RedisQueue = require("simple-redis-queue")
   , EventEmitter = require('events').EventEmitter
   , store = require("./modules/cn-store-js")
@@ -11,6 +12,7 @@ var config = require('config')
 
 
 var argv = require('minimist')(process.argv.slice(2));
+var searchClient = new elasticsearch.Client(config.searchStoreConnect);
 
 
 var getSuckaForSource = function(source) {
@@ -61,14 +63,50 @@ var postSuck = function(source, lastRetrieved) {
 
 
 var saveItem = function(data, source) { 
-  store.Item.upsert(data, ["remoteID", "source"], function(err, item) {
-    if(!err) {
-      redisQueueClient.push("transform", JSON.stringify({id:item.id}));
-      item = null;
+  searchClient.search({
+    index: 'item',
+    type: 'item-type',
+    body: {
+      query: {
+        filtered: {
+          filter: {
+            and: [
+              {
+                term: {
+                  remoteID: data.remoteID
+                }
+              },
+              {
+                term: {
+                  source: data.source
+                }
+              }
+            ]
+          }
+        }
+      }
     }
-    else {
+  }).then(function (resp) {
+      indexData = {
+        index: 'item',
+        type: 'item-type',
+        body: data
+      };
+
+      if(resp.hits.total > 0) {
+        indexData.id = resp.hits.hits[0]._id;
+      }
+
+      searchClient.index(indexData, function (error, response) {
+        if(error) {
+          handleBrokenSource(source, data, error);
+        }
+        else {
+          redisQueueClient.push("transform", JSON.stringify({id:response._id}));
+        }
+      });
+  }, function (err) {
       handleBrokenSource(source, data, err);
-    }
   });
 };
 

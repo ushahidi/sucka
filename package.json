@@ -37,7 +37,8 @@
     "fast-csv": "0.2.2",
     "unzip": "~0.1.9",
     "validator": "~3.5.0",
-    "minimist": "0.0.8"
+    "minimist": "0.0.8",
+    "elasticsearch": "~2.1.4"
   },
   "devDependencies": {
     "mocha": "1.13.0",
