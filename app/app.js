@@ -99,6 +99,7 @@ var saveItem = function(data, source) {
 
       searchClient.index(indexData, function (error, response) {
         if(error) {
+          logger.error(error);
           handleBrokenSource(source, data, error);
         }
         else {
@@ -106,6 +107,7 @@ var saveItem = function(data, source) {
         }
       });
   }, function (err) {
+      logger.error(err);
       handleBrokenSource(source, data, err);
   });
 };
