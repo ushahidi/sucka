@@ -47,8 +47,12 @@ sucka.suck = function(source, bus) {
       bus.emit("sucked", source, lastRetrievedDoc);
       return;
     }
+
+    propertiesObject.offset = offset;
     
     request({url:url, qs:propertiesObject, json:true}, function(err, response, body) {
+      logger.info("ReliefWeb request: " + url);
+      logger.info("ReliefWeb props: " + JSON.stringify(propertiesObject));
       if(err) { bus.emit('error', err); return; }
 
       var data = response.body.data;
