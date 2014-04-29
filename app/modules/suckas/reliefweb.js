@@ -58,25 +58,38 @@ sucka.suck = function(source, bus) {
       var data = response.body.data;
 
       _(data.list).each(function(item) {
-        _(item.fields.country).each(function(country, idx) {
-          item.singleCountry = country.name;
-    
-          // Every item must have a unique remote id, so because we create multiple
-          // documents from a single returned record, we need to create a modified
-          // remoteid for "child" documents
-          if(idx === 0) {
-            item.idToUse = item.id;
-          }
-          else {
-            item.idToUse = item.id + "-" + idx;
-          }
+        if(!item.fields.country) {
+          item.idToUse = item.id;
           var transformed = sucka.transform(item);
           bus.emit("data", transformed);
-          lastRetrievedDoc = transformed;
-        });
+        }
+        else {
+          _(item.fields.country).each(function(country, idx) {
+            item.singleCountry = country.name;
+      
+            // Every item must have a unique remote id, so because we create multiple
+            // documents from a single returned record, we need to create a modified
+            // remoteid for "child" documents
+            if(idx === 0) {
+              item.idToUse = item.id;
+            }
+            else {
+              item.idToUse = item.id + "-" + idx;
+            }
+            var transformed = sucka.transform(item);
+            bus.emit("data", transformed);
+            //logger.info("ReliefWeb saving: " + JSON.stringify(transformed));
+            lastRetrievedDoc = transformed;
+          });
+        }
       });
 
-      collectData(offset + data.count, data.total, lastRetrievedDoc);
+      if(data.count > 0) {
+        collectData(offset + data.count, data.total, lastRetrievedDoc);
+      }
+      else {
+        bus.emit("sucked", source, lastRetrievedDoc);
+      }
 
     });
   };
