@@ -37,8 +37,8 @@ sucka.transform = function(item, instanceID) {
 
       if(item.incident.locationlongitude && item.incident.locationlatitude) {
         data.coords = [
-          item.incident.locationlongitude, 
-          item.incident.locationlatitude
+          parseFloat(item.incident.locationlongitude), 
+          parseFloat(item.incident.locationlatitude)
         ]
       }
       return data;
