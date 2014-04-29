@@ -32,8 +32,8 @@ sucka.suck = function(source, bus) {
     limit: 100
   };
 
-  if(!_.isUndefined(source.lastRetrieved)) {
-    var dateTime = new Date(source.lastRetrieved.publishedAt);
+  if(!_.isUndefined(source.lastRun)) {
+    var dateTime = new Date(source.lastRun);
     propertiesObject.filter = {
       field: "date.created",
       value: {
