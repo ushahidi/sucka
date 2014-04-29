@@ -103,7 +103,7 @@ def copy_private_files():
 
 def do_release():
     sudo('npm install')
-    sudo('npm run-script setup-system-tags')
+    #sudo('npm run-script setup-system-tags')
     copy_private_files()
     check_upstart(env.upstart_script)
     sudo('service sucka status && restart sucka || start sucka')
