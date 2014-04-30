@@ -131,8 +131,7 @@ var handleBrokenSource = function(source, data, error) {
 
 
 var doSuck = function(source) {
-  logger.info("sucking for source");
-  logger.info(source);
+  logger.info("sucking for source "+source.id);
 
   var sucka = getSuckaForSource(source);
 
