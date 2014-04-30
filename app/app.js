@@ -172,6 +172,7 @@ var runApp = function() {
   setupSources();
 
   var getAndGo = function(sourceID) {
+    logger.info("sucking for source "+sourceID);
     store.Source.findById(sourceID, function(err, source) {
       if(err || !source) {
         return logger.error('No source found for '+sourceID);
@@ -187,6 +188,7 @@ var runApp = function() {
     logger.info("Listening for messages from the suckjs queue");
 
     redisQueueClient.on("message", function (queueName, payload) {
+      logger.info("Got message for queue: "+queueName);
       if(queueName !== "suckjs") return;
       
       try {
