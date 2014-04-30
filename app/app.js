@@ -131,6 +131,9 @@ var handleBrokenSource = function(source, data, error) {
 
 
 var doSuck = function(source) {
+  logger.info("sucking for source");
+  logger.info(source);
+
   var sucka = getSuckaForSource(source);
 
   if(sucka) {
@@ -172,7 +175,7 @@ var runApp = function() {
   setupSources();
 
   var getAndGo = function(sourceID) {
-    logger.info("sucking for source "+sourceID);
+    logger.info("looking for source "+sourceID);
     store.Source.findById(sourceID, function(err, source) {
       if(err || !source) {
         return logger.error('No source found for '+sourceID);
@@ -189,10 +192,14 @@ var runApp = function() {
 
     redisQueueClient.on("message", function (queueName, payload) {
       logger.info("Got message for queue: "+queueName);
+
+      var parsedPayload = JSON.parse(payload);
+      logger.info("Processing task...");
+      logger.info(parsedPayload);
       if(queueName !== "suckjs") return;
       
       try {
-        getAndGo(JSON.parse(payload).id);
+        getAndGo(parsedPayload.id);
       }
       catch(err) {
         logger.error(err);
