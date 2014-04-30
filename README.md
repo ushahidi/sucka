@@ -8,7 +8,7 @@ Each source has a corresponding `sucka` module that understands where the third-
 
 ## Writing your own sucka
 
-Need a data source sucked? We can make that happen. Here's how to contribute your own `sucka` module.
+Need a data source sucked? We can make that happen. Here's how to contribute your own `sucka` module. (Note that if you're more comfortable in Python, [here's a separate set of instructions](https://github.com/ushahidi/suckapy).)
 
 ### Down n' Dirty
 
