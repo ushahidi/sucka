@@ -193,7 +193,7 @@ var runApp = function() {
     redisQueueClient.on("message", function (queueName, payload) {
       logger.info("Got message for queue: "+queueName);
 
-      var parsedPayload = JSON.parse(payload);
+      var parsedPayload = JSON.parse(JSON.parse(payload));
       logger.info("Processing task...");
       logger.info(parsedPayload);
       if(queueName !== "suckjs") return;
