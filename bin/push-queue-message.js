@@ -12,7 +12,8 @@ var makeRedisClient = function() {
 
 var redisQueueClient = new RedisQueue(makeRedisClient());
 
-redisQueueClient.push("suckpy", JSON.stringify({id:argv.source}));
+var queueName = argv.queue || "suckjs";
+redisQueueClient.push(queueName, JSON.stringify({id:argv.source}));
 
 // As you can see, this is a utility for testing messages moving through the 
 // queue. I wouldn't use this for anything but testing. 
