@@ -8,16 +8,60 @@ Each source has a corresponding `sucka` module that understands where the third-
 
 ## Writing your own sucka
 
-Need a data source sucked? We can make that happen. Here's how to contribute your own `sucka` module. You'll need the following:
+Need a data source sucked? We can make that happen. Here's how to contribute your own `sucka` module.
+
+### Down n' Dirty
+
+First download Node.js ([download instructions](http://nodejs.org/download/)), then create a Node module that exports an object with a `suck` method. Your `suck` method should accept two arguments, the `source` document (a `Mongoose` model) and an event bus (more on this in a second).
+
+    var mySucka = {};
+    mySucka.suck = function(source, bus) {
+      // get some data
+      // transform the data
+      // for each transformed item
+      // bus.emit('data', item)
+    };
+
+Once you're confident your `suck` method retrieves the data you want, and transforms that data into `Item` objects, try it out from the command line. *If you haven't made a `sucka` before, we strongly recommended you check out the `Item` [definition](https://github.com/ushahidi/sucka/blob/master/app/modules/cn-store-js/item.js), or [some example JSON data](https://github.com/ushahidi/sucka/blob/master/test/data/twitter-formatted.json) for more details.
+
+    $ node
+    $ var myBus = new EventEmitter();
+    $ bus.on("data", function(item) { console.log(item); });
+    $ var mySucka = require("/path/to/your/sucka");
+    $ mySucka.suck({}, bus);
+
+If your `sucka` sucks like it is supposed to, you should see `Item` objects logged to the console. 
+
+Last but not least define how often you'd like your `sucka` to run, when it should start, end, etc. We also recommend you add a description so other CrisisNET users know what type of data to expect from this source. 
+
+    mySucka.definition = {
+      internalID: '883885b6-7baa-46c9-ad30-f4ccc0945674',
+      sourceType: "reliefweb",
+      frequency: "repeats",
+      repeatsEvery: "day",
+      startDate: moment('2014-03-30', 'YYYY-MM-DD'),
+      endDate: moment('2015-04-05', 'YYYY-MM-DD'),
+      description: "Historical and recent natural disaster reports from ReliefWeb's public API."
+    };
+
+Note the `internalID`. This needs to be unique. You can generate your own [at this handy website](http://uuidgenerator.net/).
+
+Once everything is working, clone this project, add your module to the `app/modules/suckas` directory and [make a pull request](https://help.github.com/articles/creating-a-pull-request). We'll take a look at your `sucka` and, if everything seems alright, we'll add it to the platform. 
+
+
+### If You're Serious
+
+You'll need the following:
 
 1. Node.js ([download instructions](http://nodejs.org/download/))
 2. MongoDB ([download instructions](http://docs.mongodb.org/manual/installation/))
+3. ElasticSearch ([download link](http://www.elasticsearch.org/overview/elkdownloads/))
 3. Git ([download/setup instructions](https://help.github.com/articles/set-up-git))
 
 ### For Experienced Node.js Developers
 
 1. Clone this repo and install dependencies
-2. Create a module that subclasses `Sucka` (see examples in `app/modules/suckas`)
+2. Create a module with a `description` property and `suck` method (see examples in `app/modules/suckas`)
 3. Add a test to the `test` directory (run tests with `npm run-script run-test`)
 4. Create a new branch for your feature and make a pull request
 
@@ -41,31 +85,15 @@ Once that's finished, you'll need to install the project dependencies. This is e
 
     npm install
 
-Ok now you're ready to code. We'll start with a simple example of retrieving data from a CSV file. You can see the finished product in the `app/modules/suckas` directory in the [kenya-traffic-incidents-2011.js file](https://github.com/ushahidi/sucka/blob/master/app/modules/suckas/kenya-traffic-incidents-2011.js).
+Ok now you're ready to code. We'll start with a simple example of retrieving data from a CSV file. You can see the finished product in the `app/modules/suckas` directory in the [reliefweb.js file](https://github.com/ushahidi/sucka/blob/master/app/modules/suckas/reliefweb.js).
 
 #### Step 1: Create a new file in the `app/modules/suckas` directory
 
 If you'll be retrieving data from a flat file that isn't accessible over the Internet (like something you downloaded to your computer), put that file in the `app/modules/suckas/data` directory. We'll get back to that in a minute.
 
-#### Step 2: Prototype the base `Sucka` module
-
-Open up your new file. We're going to add some code. If you've done classical programming, you can think of this like a subclass. If you don't know what that means, just copy/paste.
-
-    var Sucka = require("./sucka")
-    , logger = require("winston")
-    , moment = require("moment")
-    , csv = require("fast-csv")
-    , _s = require("underscore.string")
-
-
-    var KenyaTraffic = function() {};
-    KenyaTraffic.prototype = Object.create(Sucka.prototype);
-
-First we tell our new module that we'll be referencing some other modules. We do that with the `require` statements at the top. The most important one right now is `Sucka`. Then we make an object and tell it to inherit all the capabilities of the base `Sucka` module. Sweet. Now let's suck some data.
-
-Now let's tell the system how often we want this sucka to, erm, suck.
-
-    KenyaTraffic.definition = {
+#### Step 2: Tell the system how often we want this sucka to, erm, suck.
+    var mySucka = {};
+    mySucka.definition = {
       internalID: '5f072dc8-4423-4652-86c4-4c59d5ea04e8',
       sourceType: "kenya-traffic-2011",
       frequency: "repeats",
@@ -93,17 +121,16 @@ If you're curious, whenever the `sucka` app process restarts, it checks for new 
 
 Every `sucka` must have a `suck` method. This defines the procedure for getting the data. In this case that just means pulling the data out of a file in the `data` directory, which is made wonderfully simple thanks to [fast-csv](https://github.com/C2FO/fast-csv). 
 
-    KenyaTraffic.prototype.suck = function() {
-      var that = this;
-
+    mySucka.suck = function(source, bus) {
       csv(__dirname + "/data/kenya-traffic-incidents-2011.csv", {headers:true})
       .on("data", function(data){
-          that.transform(data);
+          var item = transform(data);
+          bus.emit("data", item);
       })
       .parse();
     };
 
-The `this` keyword in JavaScript can be confusing, but the `that = this` line just ensures that we have an easy reference to other `KenyaTraffic` methods. The important part of that we're calling `csv` (which we `require`d at the top of the file), and passing it the name of the file from which we'd like to get some data. As `csv` parses the file, it notifies us every time it has new data. So we "bind" a function to that event, and pass the data we receive to our `transform` method. In this case the parsed CSV data looks something like this...
+As `csv` parses the file, it notifies us every time it has new data. So we "bind" a function to that event, and pass the data we receive to our `transform` method. In this case the parsed CSV data looks something like this...
 
     {
       Serial: "12345",
@@ -116,7 +143,7 @@ The `this` keyword in JavaScript can be confusing, but the `that = this` line ju
 
 Now you assign values from your newly parsed CSV data to properties in the CrisisNET schema. Almost all data from `sucka` modules is saved as `Item` documents. *If you haven't made a `sucka` before, we strongly recommended you Check out the `Item` [definition](https://github.com/ushahidi/sucka/blob/master/app/modules/cn-store-js/item.js), or [some example JSON data](https://github.com/ushahidi/sucka/blob/master/test/data/twitter-formatted.json) for more details. Note that `//` in JavaScript is a single line comment. 
 
-    KenyaTraffic.prototype.transform = function(inputData) {
+    mySucka.transform = function(inputData) {
       var outputData = {
         // The remoteID should be unique. This helps the system recognize updates
         // to existing data. Usually the data you're working with provide a unique 
@@ -174,7 +201,7 @@ First include the required modules:
       , mongoose = require('mongoose')
       , clearDB  = require('mocha-mongoose')(config.dbURI)
       , store = require('../app/modules/cn-store-js')
-      , KenyaTraffic = require('../app/modules/suckas/kenya-traffic-incidents-2011')
+      , kt = require('../app/modules/suckas/kenya-traffic-incidents-2011')
       , csv = require("fast-csv");
 
 The most important is `KenyaTraffic` (ie the sucka we want to test). Now we'll add some boilerplate and setup the test.
@@ -188,7 +215,6 @@ The most important is `KenyaTraffic` (ie the sucka we want to test). Now we'll a
         });
 
         it('should transform data to the correct format', function(){
-          var kt = new KenyaTraffic();
 
           // We're only testing the transform method to make sure the Item it returns is 
           // properly formatted. So get the data, just like we did in the "suck" method.
@@ -199,7 +225,7 @@ The most important is `KenyaTraffic` (ie the sucka we want to test). Now we'll a
               var data = kt.transform(data);
 
               // Store the data as an Item document
-              ktModel = new store.Item(data[0]);
+              ktModel = new store.Item(data);
 
               // Save the Item document, and verify that the saved document has the properties 
               // that you would expect.
@@ -223,7 +249,7 @@ From your projects main directory, run this from the command line.
 
 If your test fails, then something is wrong with your `sucka`. Fix it and run the test again.
 
-And that's it. Experienced programmers should find this fairly straightforward. If you have less experience with JavaScript you should be able to get away mostly with copy/paste. However if you run into problems please contact us.
+Experienced programmers should find this fairly straightforward. If you have less experience with JavaScript you should be able to get away mostly with copy/paste. However if you run into problems please contact us.
 
 Once your tests pass we'll incorporate your `sucka` into the application. You can let us know you've finished with a "pull request". This is common practice for projects managed on GitHub. If you're not familiar with how this works, here are the steps.
 
