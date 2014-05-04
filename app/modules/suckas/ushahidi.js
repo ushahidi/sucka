@@ -83,7 +83,8 @@ var getInstanceData = function(err, source, bus, tuples) {
   var totalProcessed = 0;
 
   var propertiesObject = {
-    task: 'incidents'
+    task: 'incidents',
+    limit: 100
   };
   
   _(tuples).each(function(tuple) {
