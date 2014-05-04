@@ -61,7 +61,7 @@ var getInstanceIDs = function(source, bus, callback) {
   var propertiesObject = {
     return_vars: "url",
     limit: "0,5000",
-    minpopularity: 100
+    minpopularity: 10
   };
 
   request({url:url, qs:propertiesObject, json:true}, function(err, response, body) {
