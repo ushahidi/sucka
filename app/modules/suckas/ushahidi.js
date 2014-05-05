@@ -84,18 +84,28 @@ var getInstanceData = function(err, source, bus, tuples) {
 
   var propertiesObject = {
     task: 'incidents',
-    limit: 100
+    limit: 10
   };
   
   _(tuples).each(function(tuple) {
     
     if(lastRetrieved[tuple[0]]) {
       propertiesObject.by = 'sinceid';
-      propertiesObject.id = lastRetrieved[tuple[0]];
+      propertiesObject.id = lastRetrieved[tuple[0]].split('-')[1];
     }
 
     request({url: tuple[1], qs: propertiesObject, json:true}, function(err, response, body) {
       //that.returnData({'remoteID': tuple[0], 'source':'test'});
+
+      if(response && response.body && typeof response.body === "string") {
+        console.log(response.body);
+        response.body = JSON.parse(response.body);
+      }
+
+      //if(tuple[1] === 'https://syriatracker.crowdmap.com/api') {
+      //  console.log(response.body.payload);
+      //}
+      
       if(response && response.body && response.body.payload && response.body.payload.incidents) {
          var transformed = _(response.body.payload.incidents).map(function(item) {
             return sucka.transform(item, tuple[0]);

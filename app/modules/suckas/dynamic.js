@@ -10,46 +10,38 @@ sucka.definition = {
 };
 
 sucka.suck = function(source, bus) {
-  // todo
+  request(source.sourceURL, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var records = strToProp(source.listProperty, body);
+      _(records).each(function(record) {
+        var transformed = sucka.transform(record);
+        bus.emit("data", transformed);
+      });
+
+      bus.emit("sucked", source);
+    }
+    else {
+      bus.emit("error", source);
+    }
+  });
 };
 
 sucka.transform = function(doc, source) {
   var item = {};
 
-  var strToProp = function(str, obj) {
-    var arr = str.split('.');
-    var key = arr.pop();
-
-    try {
-      var obj = _(arr).reduce(function(memo, prop) { return memo[prop]; }, obj);
-      if(_(obj).isArray()) {
-        return _(obj).pluck(key);
-      }
-      else {
-        return obj[key];
-      }
-    }
-    catch(err) {
-      return null;
-    }
-  };
-
   var assignVal = function(str, obj, val) {
     var depth = str.split(".")
       , key = depth.shift();
 
-    if(depth.length === 0) {
-      if(_(val).isArray()) {
-        obj = _(val).map(function(v) {
-            var o = {};
-            o[key] = v;
-            return o;
-          });
-      }
-      else {
-        obj[key] = val;
-      }
-      return;
+    if(_(val).isArray() && depth.length === 1) {
+      obj[key] = _(val).map(function(v) {
+          var o = {};
+          o[depth[0]] = v;
+          return o;
+        });
+    }
+    else if(depth.length === 0) {
+      obj[key] = val;
     }
     else {
       obj[key] = obj[key] || {};
@@ -61,8 +53,25 @@ sucka.transform = function(doc, source) {
     assignVal(key, item, strToProp(val, doc));
   });
 
-  //console.log("HELLO", item);
   return item;
+};
+
+var strToProp = function(str, obj) {
+  var arr = str.split('.');
+  var key = arr.pop();
+
+  try {
+    var obj = _(arr).reduce(function(memo, prop) { return memo[prop]; }, obj);
+    if(_(obj).isArray()) {
+      return _(obj).pluck(key);
+    }
+    else {
+      return obj[key];
+    }
+  }
+  catch(err) {
+    return null;
+  }
 };
 
 module.exports = sucka;
