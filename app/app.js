@@ -16,14 +16,20 @@ var searchClient = new elasticsearch.Client(config.searchStoreConnect);
 
 
 var getSuckaForSource = function(source) {
-  var Sucka = suckas[source.sourceType];
-  if(typeof Sucka === "undefined") {
-    logger.warn("sucka.App.getSuckaForSource no sucka for " + source.sourceType);
-    return null;
+  if(source.isDynamic) {
+    logger.info("sucka.App.getSuckaForSource using dynamic sucka for "+source.sourceType);
+    return suckas.dynamic;
   }
+  else {
+    var Sucka = suckas[source.sourceType];
+    if(typeof Sucka === "undefined") {
+      logger.warn("sucka.App.getSuckaForSource no sucka for " + source.sourceType);
+      return null;
+    }
 
-  logger.info("sucka.App.getSuckaForSource found sucka for " + source.sourceType);
-  return Sucka;
+    logger.info("sucka.App.getSuckaForSource found sucka for " + source.sourceType);
+    return Sucka;
+  }
 };
 
 
@@ -64,7 +70,7 @@ var postSuck = function(source, lastRetrieved) {
 
 var saveItem = function(data, source) { 
   searchClient.search({
-    index: 'item',
+    index: 'item_alias',
     type: 'item-type',
     body: {
       query: {
@@ -88,7 +94,7 @@ var saveItem = function(data, source) {
     }
   }).then(function (resp) {
       indexData = {
-        index: 'item',
+        index: 'item_alias',
         type: 'item-type',
         body: data
       };
@@ -105,11 +111,12 @@ var saveItem = function(data, source) {
         else {
           redisQueueClient.push("transform", JSON.stringify({id:response._id}));
         }
-      });
-  }, function (err) {
+      });      
+    }, function(err) {
       logger.error(err);
       handleBrokenSource(source, data, err);
-  });
+    }
+  );
 };
 
 

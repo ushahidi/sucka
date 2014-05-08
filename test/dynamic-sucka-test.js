@@ -2,15 +2,18 @@ var sampleSource = { sourceType: 'ReliefWeb',
   sourceURL: 'http://api.rwlabs.org/v0/disaster/list?fields[include][]=name&fields[include][]=description&fields[include][]=date&fields[include][]=primary_country&fields[include][]=type',
   sourceDataType: 'json',
   description: 'For Relief of the Web.',
-  listProperty: 'data.list',
+  listProperty: 'data|list',
   isDynamic: 'true',
-  mapping: 
-   { remoteID: 'id',
-     publishedAt: 'fields.date',
-     content: 'fields.description',
-     summary: 'fields.name',
-     'tags.name': 'fields.type.name',
-     'geo.addressComponents.adminArea1': 'fields.primary_country.name' },
+  mapping: { 
+    remoteID: 'id',
+    publishedAt: 'fields|date',
+    content: 'fields|description',
+    summary: 'fields|name',
+    'tags|name': 'fields|type|name',
+    'geo|addressComponents|adminArea1': 'fields|primary_country|name' },
+  statics: {
+    lifespan: 'temporary'
+  },
   internalID: 'dddba582-4a2d-4a46-a2a5-66c26b1d5e50',
   createdBy: '532d1bacbbcdd1862d6e15b2' }
 
@@ -47,6 +50,7 @@ describe('reliefweb sucka', function(){
       assert.isDefined(transformed.remoteID);
       assert(transformed.remoteID === sampleData.id);
       assert.isDefined(transformed.content);
+      assert(transformed.lifespan === "temporary");
     });
 
     fakeBus.on("sucked", function(source, lastRetrieved) {
